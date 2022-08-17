@@ -15,7 +15,9 @@ To open an image file, simply drag and drop it onto the gray area or use the Fil
 
 No Zoom function is implemented at the moment, therefore choose a small image to test.
 
-Normally, it is not necessary to load the application through a web server; it should run locally, directly in your browser, by lauching the file named "index.html". Be sure to have all the folders present in the project nearby.
+Normally, it is not necessary to load the application through a web server; it should run locally, directly in your browser, by opening the file named "index.html" in Chrome. Be sure to have all the folders present in the project nearby.
+
+You can also simply run it folowing this demo link [ppyne.github.io/electriccat](https://ppyne.github.io/electriccat/).
 
 Here is an ideal test image, save it on your computer, 
 
