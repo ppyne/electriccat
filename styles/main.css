@@ -1,0 +1,585 @@
+* {
+    outline:none;
+}
+::selection {
+    background-color:black;
+    color:white;
+}
+::-moz-selection {
+    background-color:black;
+    color:white;
+}
+html, body.potoshop, .potoshop #workingarea {
+    width:100%;
+    height:100%;
+}
+body.potoshop {
+    margin:0;
+    background-image:url(../images/fond2.gif);
+    font-family:Chicago, sans-serif;
+    font-size:12px;
+}
+.potoshop label {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari*/
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+}
+.potoshop .layer {
+    display:none;
+    position:absolute;
+    width:100%;
+    height:100%;
+    z-index:2900;
+    background-color:rgba(0,0,0,0.0);
+    top:0;
+    left:0;
+}
+.potoshop #workingarea {
+    padding:20px;
+    box-sizing:border-box;
+    overflow:scroll;
+    left:0;
+    top:20px;
+}
+.potoshop input[type=text] {
+    border:solid 1px black;
+    padding-top:2px;
+    padding-bottom:0;
+    padding-left: 4px;
+    padding-right: 4px;
+    outline: 1px solid white;
+    font-family:Chicago, sans-serif;
+    font-size:10px;
+}
+.potoshop input[type=text]:focus {
+    outline:2px solid black;
+}
+.potoshop input[type=text][disabled] {
+    background-color:whitesmoke;
+    color:gray;
+    border:solid 1px gray;
+}
+.potoshop button {
+    border:1px solid black;
+    border-radius:7px;
+    background-color:white;
+    color:black;
+    font-family:Chicago, sans-serif;
+    font-size:12px;
+    cursor:pointer;
+    padding-top:3px;
+    padding-bottom:3px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.potoshop button:active {
+    background-color:black;
+    color:white;
+}
+.potoshop button.main {
+    box-shadow: 0 0 0 1px black;
+}
+.potoshop label {
+    display:block;
+    margin-bottom:4px;
+}
+.potoshop fieldset {
+    margin:12px;
+    border: 1px solid black;
+    display:inline-block;
+    background-color:white;
+    min-height:130px;
+}
+.potoshop fieldset.white {
+    border: 1px solid white;
+}
+.potoshop .messageBox {
+    position:absolute;
+    z-index:4000;
+    border:1px black solid;
+    padding:2px;
+    background-color:white;
+    top:-1000px; /* DEBUG*/
+    left:-1000px; /* DEBUG*/
+}
+.potoshop .messageBox.hidden {
+    display:none; /* DEBUG*/
+}
+.potoshop .messageBox .inner {
+    border:2px black solid;
+    padding:16px 24px 14px 24px;
+}
+.potoshop .messageBox button {
+    min-width:76px;
+}
+.potoshop .messageBox .inner .text {
+    margin-bottom:14px;
+}
+.potoshop .messageBox .inner .buttons {
+    text-align:right;
+}
+.potoshop .messageBox.error .inner, .potoshop .messageBox.warning .inner, .potoshop .messageBox.info .inner, .messageBox.bomb .inner {
+    padding-left:76px;
+    background-repeat:no-repeat;
+    background-position:22px 14px;
+}
+.potoshop .messageBox.error .inner {
+    background-image:url(../images/icon_32_stop.gif);
+}
+.potoshop .messageBox.warning .inner {
+    background-image:url(../images/icon_32_exclam.gif);
+}
+.potoshop .messageBox.info .inner {
+    background-image:url(../images/icon_32_message.gif);
+}
+.potoshop .messageBox.bomb .inner {
+    background-image:url(../images/icon_32_bomb.gif);
+}
+.potoshop .dialog {
+    background-color:white;
+    display:table;
+    border:1px black solid;
+    border-right:2px black solid;
+    border-bottom:2px black solid;
+    position:absolute;
+    z-index:3000;
+    top:-1000px; /* DEBUG*/
+    left:-1000px; /* DEBUG*/
+}
+.potoshop .dialog.hidden {
+    display:none; /* DEBUG*/
+}
+.potoshop .dialog .bar {
+    height: 16px;
+    background-image:url(../images/dialogbar.gif);
+    background-repeat:repeat-x;
+    background-position:center center;
+    margin:1px 3px 0 3px;
+    cursor:move;
+    text-align:center;
+}
+.potoshop .dialog .bar .caption {
+    display:inline-block;
+    background-color:white;
+    margin: 0 auto;
+    padding: 0 7px;
+    height:16px;
+}
+.potoshop .dialog .border {
+    border:1px solid black;
+    margin:2px 3px 3px;
+}
+.potoshop .dialog .zone {
+    display:table-row;
+}
+.potoshop .dialog .zone .main {
+    display:table-cell;
+}
+.potoshop .dialog .zone .main .emptyfieldset {
+    margin:16px 20px 24px;
+    min-height:130px;
+}
+.potoshop .dialog .zone .buttons {
+    display:table-cell;
+    vertical-align:top;
+    padding-top:20px;
+    padding-right:12px;
+}
+.potoshop .dialog .zone .buttons button {
+    display:block;
+    width:100%;
+    margin-bottom:6px;
+}
+.potoshop .subfieldset {
+    border:1px black solid;
+    margin:0;
+    margin-top:10px;
+    padding:0 10px 5px;
+}
+.potoshop .chanmix_sources {
+    position:relative;
+    display:block;
+    width:224px;
+    height:167px
+}
+.potoshop .chanmix_source {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:500;
+    overflow:visible;
+}
+.potoshop .chanmix_source {
+    margin-top:7px;
+}
+.potoshop .chanmix_source.top {
+    z-index:550;
+}
+.potoshop .chanmix_source legend {
+    background-color:white;
+}
+
+
+.potoshop .levels_channels {
+    position:relative;
+    display:block;
+    width:266px;
+    height:224px
+}
+.potoshop .levels_channel {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:500;
+    overflow:visible;
+    background-color:white;
+    padding:0 4px;
+}
+.potoshop .levels_channel.top {
+    z-index:550;
+}
+
+.potoshop .histogram_channels {
+    position:relative;
+    display:block;
+    width:266px;
+    height:193px
+}
+.potoshop .histogram_channel {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:500;
+    overflow:visible;
+    background-color:white;
+    padding:0 4px;
+}
+.potoshop .histogram_channel.top {
+    z-index:550;
+}
+
+
+.potoshop .curves_channels {
+    position:relative;
+    display:block;
+    width:190px;
+    height:190px
+}
+.potoshop .curves_channel {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:500;
+    overflow:visible;
+    background-color:white;
+    padding:4px;
+}
+.potoshop .curves_channel.top {
+    z-index:550;
+}
+
+.potoshop .colbal_tones {
+    position:relative;
+    display:block;
+    width:224px;
+    height:167px
+}
+.potoshop .colbal_tone {
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:500;
+    overflow:visible;
+}
+.potoshop .colbal_tone {
+    margin-top:7px;
+}
+.potoshop .colbal_tone.top {
+    z-index:550;
+}
+.potoshop .colbal_tone legend {
+    background-color:white;
+    opacity:0.0;
+}
+.potoshop .colbal_tone.top legend {
+    background-color:white;
+    opacity:1.0;
+}
+.potoshop .minipal {
+    display:inline-block;
+    width:6px;
+    height:6px;
+    background-color:white;
+    border:black 1px solid;
+}
+.potoshop #palette .square {
+    width:15px;
+    height:15px;
+    display:inline-block;
+    float:left;
+    margin: 0 1px 1px 0;
+}
+.potoshop #palette {
+    margin-top:14px;
+    border:1px solid black;
+    padding: 1px 0 0 1px;
+    width: 256px;
+    height: 256px;
+    background-image:url(../images/palette.gif);
+    background-position: top left;
+}
+.potoshop #src, .potoshop #dst, .potoshop #grid {
+    position:absolute;
+    top:0;
+    left:0;
+}
+.potoshop #containment {
+    position:relative;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari*/
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+}
+.potoshop #src {
+    z-index:1501;
+}
+.potoshop #dst {
+    z-index:1502;
+}
+.potoshop #grid {
+    display:inline-block;
+    background-image:url(../images/gridwhite.png);
+    background-position:center center;
+    z-index:1505;
+    mix-blend-mode: difference;
+}
+.potoshop #grid.disabled {
+    display:none;
+}
+.potoshop #selection {
+    cursor:move;
+    border: 1px dashed black;
+    border-image: url('../images/ants.gif') 8 repeat repeat;
+    -moz-border-image: url('../images/ants.gif') 1 repeat repeat;
+    -webkit-border-image: url('../images/ants.gif') 1 repeat repeat;
+    width:400px;
+    height:225px;
+    position:absolute;
+    box-sizing:border-box;
+    z-index:2950;
+}
+.potoshop #selection .handler  {
+    position:absolute;
+    border:1px solid white;
+    background-color:black;
+    width:9px;
+    height:9px;
+    box-sizing:border-box;
+    z-index:2951;
+}
+.potoshop #selection .handler.ne {
+    top:-5px;
+    right:-5px;
+    cursor:nesw-resize;
+}
+.potoshop #selection .handler.nw {
+    top:-5px;
+    left:-5px;
+    cursor:nwse-resize;
+}
+.potoshop #selection .handler.se {
+    bottom:-5px;
+    right:-5px;
+    cursor:nwse-resize;
+}
+.potoshop #selection .handler.sw {
+    bottom:-5px;
+    left:-5px;
+    cursor:nesw-resize;
+}
+.potoshop #crop_containment {
+    position:relative;
+    z-index:2940;
+    top:0;
+    left:0;
+}
+.potoshop #mask {
+    position:absolute;
+    opacity:0.6;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:2900;
+}
+.potoshop #mask #maskpath {
+    position:absolute;
+}
+@keyframes nubblink {
+to { background-color: #007FFF; }
+}
+@-moz-keyframes nubblink {
+to { background-color: #007FFF; }
+}
+@-webkit-keyframes nubblink {
+to { background-color: #007FFF; }
+}
+.potoshop .nub {
+    background-color: white;
+    animation: nubblink 1s steps(2, start) infinite;
+    -moz-box-animation: nubblink 1s steps(2, start) infinite;
+    -webkit-box-animation: nubblink 1s steps(2, start) infinite;
+    width:6px;
+    height:6px;
+    border:2px white solid;
+    border-radius:50%;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    cursor: move;
+    position:absolute;
+    z-index:2950;
+    margin-top:-5px;
+    margin-left:-5px;
+}
+.potoshop #nub_containment {
+    position:relative;
+    z-index:2940;
+    top:0;
+    left:0;
+}
+.potoshop #dialog_curves .curvesbg {
+    background-image:url(../images/curves_bg.png);
+    background-repeat:no-repeat;
+    background-position:top left;
+    width:173px;
+    height:173px;
+    padding:0 0 9px 9px;
+}
+.potoshop #dialog_curves .curvesbg.red {
+    background-image:url(../images/curves_bg_red.png);
+}
+.potoshop #dialog_curves .curvesbg.green {
+    background-image:url(../images/curves_bg_green.png);
+}
+.potoshop #dialog_curves .curvesbg.blue {
+    background-image:url(../images/curves_bg_blue.png);
+}
+.potoshop #dialog_curves .curves {
+    width:171px;
+    height:171px;
+    border:1px solid black;
+}
+.potoshop #dialog_curves .curves svg {
+    background-color:#FCFCFC;
+    background-image:url(../images/curves_back.gif);
+    cursor:crosshair;
+}
+.potoshop #dialog_curves .curves svg:focus {
+    background-color:white;
+}
+.potoshop #dialog_curves rect.bg {
+    fill: none;
+    pointer-events: all;
+}
+
+.potoshop #dialog_curves path.line, #dialog_curves path.left, #dialog_curves path.right {
+    fill: none;
+    stroke: black;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+.potoshop #dialog_curves .red path.line, #dialog_curves .red path.left, #dialog_curves .red path.right {
+    stroke: red;
+}
+.potoshop #dialog_curves .green path.line, #dialog_curves .green path.left, #dialog_curves .green path.right {
+    stroke: green;
+}
+.potoshop #dialog_curves .blue path.line, #dialog_curves .blue path.left, #dialog_curves .blue path.right {
+    stroke: blue;
+}
+
+.potoshop #dialog_curves rect.handle {
+    fill: black;
+    stroke: black;
+    stroke-width: 1px;
+    cursor: move;
+    shape-rendering: crispEdges;
+}
+
+.potoshop #dialog_curves .red rect.handle {
+    fill: red;
+    stroke: red;
+}
+.potoshop #dialog_curves .green rect.handle {
+    fill: green;
+    stroke: green;
+}
+.potoshop #dialog_curves .blue rect.handle {
+    fill: blue;
+    stroke: blue;
+}
+
+.potoshop #dialog_curves rect.handle.selected {
+    fill: white;
+}
+.potoshop #photofilter_filters {
+    width:260px;
+    height:160px;
+    overflow:scroll;
+    border:1px black solid;
+}
+.potoshop #photofilter_filters .filter_line {
+    cursor:pointer;
+    background-color:white;
+    padding:4px;
+    color:black;
+    width:360px;
+    height:34px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari*/
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+}
+.potoshop #photofilter_filters .filter_line:hover {
+    background-color:darkgray;
+    color:white;
+}
+.potoshop #photofilter_filters .filter_line.selected {
+    background-color:dimgray;
+    color:white;
+}
+.potoshop #photofilter_filters .filter_pal {
+    display:block;
+    float:left;
+    border:1px solid black;
+    width:32px;
+    height:32px;
+}
+.potoshop #photofilter_filters .filter_label {
+    display:block;
+    width:296px;
+    height:34px;
+    max-height:34px !important;
+    overflow:hidden;
+    padding-left:7px;
+    font-family: Helvetica, Arial, sans-serif;
+}
+.potoshop #photofilter_filters .filter_label .title {
+    font-size:15px;
+    line-height:18px;
+    margin-top:2px;
+    white-space:nowrap;
+}
+.potoshop #photofilter_filters .filter_label .desc {
+    font-size:10px;
+    line-height:10px;
+    white-space:nowrap;
+}

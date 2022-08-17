@@ -1,0 +1,13 @@
+/* Chicago Regular (Chicago) */
+@font-face {
+    font-family: "Chicago";
+    src: url("../fonts/Chicago.eot");
+    src: url("../fonts/Chicago.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/Chicago.woff2") format("woff2"),
+         url("../fonts/Chicago.woff") format("woff"),
+         url("../fonts/Chicago.ttf") format("truetype"),
+         url("../fonts/Chicago.svg#Chicago") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
