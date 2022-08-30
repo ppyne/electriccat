@@ -276,7 +276,7 @@ function handleFileSelect(evt) {
     evt.preventDefault();
     var files = evt.dataTransfer.files;
     for (var i = 0, f; f = files[i]; i++) {
-        if (f.type.match(/^image\/(jpg|jpeg|png|gif)/)) {
+        if (f.type.match(/^image\/(jpg|jpeg|png|webp|gif)/)) {
             var reader = new FileReader();
             reader.onload = (function(theFile) {
                 return function(e) {
@@ -285,7 +285,7 @@ function handleFileSelect(evt) {
             })(f);
             reader.readAsDataURL(f);
         } else {
-            //alert('Only PNG, JPEG and GIF are handled.');
+            //alert('Only PNG, JPEG, WEBP and GIF are handled.');
             $('#mb_unsupported').messageBox('open');
         }
     }
@@ -810,14 +810,14 @@ function disableMenusOnClose() {
 function makeOpenFile() {
   var file = document.querySelector('#fileinput').files[0];
   if (typeof file != 'undefined') {
-      if (file.type.match(/^image\/(jpg|jpeg|png|gif)/)) {
+      if (file.type.match(/^image\/(jpg|jpeg|webp|png|gif)/)) {
           var reader = new FileReader();
           reader.addEventListener("load", function () {
                 makeOpen(reader.result, file.name, file.type);
           }, false);
           reader.readAsDataURL(file);
       } else {
-          //alert('Only PNG, JPEG and GIF are handled.');
+          //alert('Only PNG, JPEG, WEBP and GIF are handled.');
           $('#mb_unsupported').messageBox('open');
       }
   }
@@ -878,6 +878,7 @@ function makeSave() {
         finalname = finalname = name[1];
     }
     if (data.Mime == 'image/png') finalname += '.png';
+    else if (data.Mime == 'image/webp') finalname += '.webp';
     else if (data.Mime == 'image/jpg' | data.Mime == 'image/jpeg') finalname += '.jpg';
     else if (data.Mime == 'image/gif') finalname += '.gif';
     saveAs(blob, finalname);
@@ -3212,7 +3213,7 @@ $(function() {
 
 <script>
 $(function() {
-    $('#mb_unsupported').messageBox({text:'Only PNG, JPEG and GIF are handled.'});
+    $('#mb_unsupported').messageBox({text:'Only PNG, JPEG, WEBP and GIF are handled.'});
 });
 </script>
     <div id="mb_unsupported" class="messageBox error"></div>
