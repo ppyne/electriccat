@@ -1,43 +1,67 @@
+:root {
+    --ec-color-red: red;
+    --ec-color-green: green;
+    --ec-color-blue: blue;
+    --ec-color-black: black;
+    --ec-color-white: white;
+    --ec-color-gray: gray;
+    --ec-color-medium-gray: #7F7F7F;
+    --ec-color-light-gray: whitesmoke;
+    --ec-nub-color: #007FFF;
+    --ec-nub-shadow-color: rgba(0, 0, 0, 0.7); 
+    --ec-curves-bgcolor: #FCFCFC;
+    --ec-curves-bgimage: url(../images/curves_bg.png);
+    --ec-curves-bgimage-red: url(../images/curves_bg_red.png);
+    --ec-curves-bgimage-green: url(../images/curves_bg_green.png);
+    --ec-curves-bgimage-blue: url(../images/curves_bg_blue.png);
+    --ec-curves-grid: url(../images/curves_back.gif);
+    --ec-photo-filter-selected: dimgray;
+    --ec-photo-filter-hover: darkgray;
+    --ec-icon-error: url(../images/icon_32_stop.gif);
+    --ec-icon-warning: url(../images/icon_32_exclam.gif);
+    --ec-icon-info: url(../images/icon_32_message.gif);
+    --ec-icon-bomb: url(../images/icon_32_bomb.gif);
+    --ec-dialog-bar: url(../images/dialogbar.gif);
+    --ec-palette-grid: url(../images/palette.gif);
+    --ec-rotate-grid: url(../images/gridwhite.png);
+    --ec-crop-selection: url(../images/ants.gif);
+}
+
 * {
     outline: none;
 }
 
 ::selection {
-    background-color: black;
-    color: white;
+    background-color: var(--ec-color-black);
+    color: var(--ec-color-white);
 }
 
 ::-moz-selection {
-    background-color: black;
-    color: white;
+    background-color: var(--ec-color-black);
+    color: var(--ec-color-white);
 }
 
 html,
 body.ElectricCat,
 .ElectricCat #workingarea {
     width: 100%;
-    height: 100%;
+    height: 100vh;
 }
 
 body.ElectricCat {
     margin: 0;
     /*background-image: url(../images/fond2.gif);*/
-    background-color: #7F7F7F;
+    background-color: var(--ec-color-medium-gray);
     font-family: Chicago, sans-serif;
     font-size: 12px;
 }
 
 .ElectricCat label {
     -webkit-touch-callout: none;
-    /* iOS Safari */
     -webkit-user-select: none;
-    /* Safari*/
     -khtml-user-select: none;
-    /* Konqueror */
     -moz-user-select: none;
-    /* Firefox */
     -ms-user-select: none;
-    /* Internet Explorer/Edge */
     user-select: none;
 }
 
@@ -61,31 +85,31 @@ body.ElectricCat {
 }
 
 .ElectricCat input[type=text] {
-    border: solid 1px black;
+    border: solid 1px var(--ec-color-black);
     padding-top: 2px;
     padding-bottom: 0;
     padding-left: 4px;
     padding-right: 4px;
-    outline: 1px solid white;
+    outline: 1px solid var(--ec-color-white);
     font-family: Chicago, sans-serif;
     font-size: 10px;
 }
 
 .ElectricCat input[type=text]:focus {
-    outline: 2px solid black;
+    outline: 2px solid var(--ec-color-black);
 }
 
 .ElectricCat input[type=text][disabled] {
-    background-color: whitesmoke;
-    color: gray;
-    border: solid 1px gray;
+    background-color: var(--ec-color-white)smoke;
+    color: var(--ec-color-gray);
+    border: solid 1px var(--ec-color-gray);
 }
 
 .ElectricCat button {
-    border: 1px solid black;
+    border: 1px solid var(--ec-color-black);
     border-radius: 7px;
-    background-color: white;
-    color: black;
+    background-color: var(--ec-color-white);
+    color: var(--ec-color-black);
     font-family: Chicago, sans-serif;
     font-size: 12px;
     cursor: pointer;
@@ -96,12 +120,12 @@ body.ElectricCat {
 }
 
 .ElectricCat button:active {
-    background-color: black;
-    color: white;
+    background-color: var(--ec-color-black);
+    color: var(--ec-color-white);
 }
 
 .ElectricCat button.main {
-    box-shadow: 0 0 0 1px black;
+    box-shadow: 0 0 0 1px var(--ec-color-black);
 }
 
 .ElectricCat label {
@@ -111,35 +135,32 @@ body.ElectricCat {
 
 .ElectricCat fieldset {
     margin: 12px;
-    border: 1px solid black;
+    border: 1px solid var(--ec-color-black);
     display: inline-block;
-    background-color: white;
+    background-color: var(--ec-color-white);
     min-height: 130px;
 }
 
 .ElectricCat fieldset.white {
-    border: 1px solid white;
+    border: 1px solid var(--ec-color-white);
 }
 
 .ElectricCat .messageBox {
     position: absolute;
     z-index: 4000;
-    border: 1px black solid;
+    border: 1px var(--ec-color-black) solid;
     padding: 2px;
-    background-color: white;
+    background-color: var(--ec-color-white);
     top: -1000px;
-    /* DEBUG*/
     left: -1000px;
-    /* DEBUG*/
 }
 
 .ElectricCat .messageBox.hidden {
     display: none;
-    /* DEBUG*/
 }
 
 .ElectricCat .messageBox .inner {
-    border: 2px black solid;
+    border: 2px var(--ec-color-black) solid;
     padding: 16px 24px 14px 24px;
 }
 
@@ -165,43 +186,40 @@ body.ElectricCat {
 }
 
 .ElectricCat .messageBox.error .inner {
-    background-image: url(../images/icon_32_stop.gif);
+    background-image: var(--ec-icon-error);
 }
 
 .ElectricCat .messageBox.warning .inner {
-    background-image: url(../images/icon_32_exclam.gif);
+    background-image: var(--ec-icon-warning);
 }
 
 .ElectricCat .messageBox.info .inner {
-    background-image: url(../images/icon_32_message.gif);
+    background-image: var(--ec-icon-info);
 }
 
 .ElectricCat .messageBox.bomb .inner {
-    background-image: url(../images/icon_32_bomb.gif);
+    background-image: var(--ec-icon-bomb);
 }
 
 .ElectricCat .dialog {
-    background-color: white;
+    background-color: var(--ec-color-white);
     display: table;
-    border: 1px black solid;
-    border-right: 2px black solid;
-    border-bottom: 2px black solid;
+    border: 1px var(--ec-color-black) solid;
+    border-right: 2px var(--ec-color-black) solid;
+    border-bottom: 2px var(--ec-color-black) solid;
     position: absolute;
     z-index: 3000;
     top: -1000px;
-    /* DEBUG*/
     left: -1000px;
-    /* DEBUG*/
 }
 
 .ElectricCat .dialog.hidden {
     display: none;
-    /* DEBUG*/
 }
 
 .ElectricCat .dialog .bar {
     height: 16px;
-    background-image: url(../images/dialogbar.gif);
+    background-image: var(--ec-dialog-bar);
     background-repeat: repeat-x;
     background-position: center center;
     margin: 1px 3px 0 3px;
@@ -211,14 +229,14 @@ body.ElectricCat {
 
 .ElectricCat .dialog .bar .caption {
     display: inline-block;
-    background-color: white;
+    background-color: var(--ec-color-white);
     margin: 0 auto;
     padding: 0 7px;
     height: 16px;
 }
 
 .ElectricCat .dialog .border {
-    border: 1px solid black;
+    border: 1px solid var(--ec-color-black);
     margin: 2px 3px 3px;
 }
 
@@ -249,7 +267,7 @@ body.ElectricCat {
 }
 
 .ElectricCat .subfieldset {
-    border: 1px black solid;
+    border: 1px var(--ec-color-black) solid;
     margin: 0;
     margin-top: 10px;
     padding: 0 10px 5px;
@@ -279,7 +297,7 @@ body.ElectricCat {
 }
 
 .ElectricCat .chanmix_source legend {
-    background-color: white;
+    background-color: var(--ec-color-white);
 }
 
 
@@ -296,7 +314,7 @@ body.ElectricCat {
     top: 0;
     z-index: 500;
     overflow: visible;
-    background-color: white;
+    background-color: var(--ec-color-white);
     padding: 0 4px;
 }
 
@@ -317,7 +335,7 @@ body.ElectricCat {
     top: 0;
     z-index: 500;
     overflow: visible;
-    background-color: white;
+    background-color: var(--ec-color-white);
     padding: 0 4px;
 }
 
@@ -339,7 +357,7 @@ body.ElectricCat {
     top: 0;
     z-index: 500;
     overflow: visible;
-    background-color: white;
+    background-color: var(--ec-color-white);
     padding: 4px;
 }
 
@@ -371,12 +389,12 @@ body.ElectricCat {
 }
 
 .ElectricCat .colbal_tone legend {
-    background-color: white;
+    background-color: var(--ec-color-white);
     opacity: 0.0;
 }
 
 .ElectricCat .colbal_tone.top legend {
-    background-color: white;
+    background-color: var(--ec-color-white);
     opacity: 1.0;
 }
 
@@ -384,8 +402,8 @@ body.ElectricCat {
     display: inline-block;
     width: 6px;
     height: 6px;
-    background-color: white;
-    border: black 1px solid;
+    background-color: var(--ec-color-white);
+    border: var(--ec-color-black) 1px solid;
 }
 
 .ElectricCat #palette .square {
@@ -398,11 +416,11 @@ body.ElectricCat {
 
 .ElectricCat #palette {
     margin-top: 14px;
-    border: 1px solid black;
+    border: 1px solid var(--ec-color-black);
     padding: 1px 0 0 1px;
     width: 256px;
     height: 256px;
-    background-image: url(../images/palette.gif);
+    background-image: var(--ec-palette-grid);
     background-position: top left;
 }
 
@@ -434,7 +452,7 @@ body.ElectricCat {
 
 .ElectricCat #grid {
     display: inline-block;
-    background-image: url(../images/gridwhite.png);
+    background-image: var(--ec-rotate-grid);
     background-position: center center;
     z-index: 1505;
     mix-blend-mode: difference;
@@ -446,10 +464,10 @@ body.ElectricCat {
 
 .ElectricCat #selection {
     cursor: move;
-    border: 1px dashed black;
-    border-image: url('../images/ants.gif') 8 repeat repeat;
-    -moz-border-image: url('../images/ants.gif') 1 repeat repeat;
-    -webkit-border-image: url('../images/ants.gif') 1 repeat repeat;
+    border: 1px dashed var(--ec-color-black);
+    border-image: var(--ec-crop-selection) 8 repeat repeat;
+    -moz-border-image: var(--ec-crop-selection) 1 repeat repeat;
+    -webkit-border-image: var(--ec-crop-selection) 1 repeat repeat;
     width: 400px;
     height: 225px;
     position: absolute;
@@ -459,8 +477,8 @@ body.ElectricCat {
 
 .ElectricCat #selection .handler {
     position: absolute;
-    border: 1px solid white;
-    background-color: black;
+    border: 1px solid var(--ec-color-white);
+    background-color: var(--ec-color-black);
     width: 9px;
     height: 9px;
     box-sizing: border-box;
@@ -514,34 +532,34 @@ body.ElectricCat {
 
 @keyframes nubblink {
     to {
-        background-color: #007FFF;
+        background-color: var(--ec-nub-color);
     }
 }
 
 @-moz-keyframes nubblink {
     to {
-        background-color: #007FFF;
+        background-color: var(--ec-nub-color);
     }
 }
 
 @-webkit-keyframes nubblink {
     to {
-        background-color: #007FFF;
+        background-color: var(--ec-nub-color);
     }
 }
 
 .ElectricCat .nub {
-    background-color: white;
+    background-color: var(--ec-color-white);
     animation: nubblink 1s steps(2, start) infinite;
     -moz-box-animation: nubblink 1s steps(2, start) infinite;
     -webkit-box-animation: nubblink 1s steps(2, start) infinite;
     width: 6px;
     height: 6px;
-    border: 2px white solid;
+    border: 2px var(--ec-color-white) solid;
     border-radius: 50%;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    box-shadow: 1px 1px 2px var(--ec-nub-shadow-color);
+    -moz-box-shadow: 1px 1px 2px var(--ec-nub-shadow-color);
+    -webkit-box-shadow: 1px 1px 2px var(--ec-nub-shadow-color);
     cursor: move;
     position: absolute;
     z-index: 2950;
@@ -557,7 +575,7 @@ body.ElectricCat {
 }
 
 .ElectricCat #dialog_curves .curvesbg {
-    background-image: url(../images/curves_bg.png);
+    background-image: var(--ec-curves-bgimage);
     background-repeat: no-repeat;
     background-position: top left;
     width: 173px;
@@ -566,31 +584,31 @@ body.ElectricCat {
 }
 
 .ElectricCat #dialog_curves .curvesbg.red {
-    background-image: url(../images/curves_bg_red.png);
+    background-image: var(--ec-curves-bgimage-red);
 }
 
 .ElectricCat #dialog_curves .curvesbg.green {
-    background-image: url(../images/curves_bg_green.png);
+    background-image: var(--ec-curves-bgimage-green);
 }
 
 .ElectricCat #dialog_curves .curvesbg.blue {
-    background-image: url(../images/curves_bg_blue.png);
+    background-image: --ec-curves-bgimage-blue;
 }
 
 .ElectricCat #dialog_curves .curves {
     width: 171px;
     height: 171px;
-    border: 1px solid black;
+    border: 1px solid var(--ec-color-black);
 }
 
 .ElectricCat #dialog_curves .curves svg {
-    background-color: #FCFCFC;
-    background-image: url(../images/curves_back.gif);
+    background-color: var(--ec-curves-bgcolor);
+    background-image: var(--ec-curves-grid);
     cursor: crosshair;
 }
 
 .ElectricCat #dialog_curves .curves svg:focus {
-    background-color: white;
+    background-color: var(--ec-color-white);
 }
 
 .ElectricCat #dialog_curves rect.bg {
@@ -602,7 +620,7 @@ body.ElectricCat {
 .ElectricCat #dialog_curves path.left,
 .ElectricCat #dialog_curves path.right {
     fill: none;
-    stroke: black;
+    stroke: var(--ec-color-black);
     stroke-width: 1px;
     shape-rendering: crispEdges;
 }
@@ -610,89 +628,84 @@ body.ElectricCat {
 .ElectricCat #dialog_curves .red path.line,
 .ElectricCat #dialog_curves .red path.left,
 .ElectricCat #dialog_curves .red path.right {
-    stroke: red;
+    stroke: var(--ec-color-red);
 }
 
 .ElectricCat #dialog_curves .green path.line,
 .ElectricCat #dialog_curves .green path.left,
 .ElectricCat #dialog_curves .green path.right {
-    stroke: green;
+    stroke: var(--ec-color-green);
 }
 
 .ElectricCat #dialog_curves .blue path.line,
 .ElectricCat #dialog_curves .blue path.left,
 .ElectricCat #dialog_curves .blue path.right {
-    stroke: blue;
+    stroke: var(--ec-color-blue);
 }
 
 .ElectricCat #dialog_curves rect.handle {
-    fill: black;
-    stroke: black;
+    fill: var(--ec-color-black);
+    stroke: var(--ec-color-black);
     stroke-width: 1px;
     cursor: move;
     shape-rendering: crispEdges;
 }
 
 .ElectricCat #dialog_curves .red rect.handle {
-    fill: red;
-    stroke: red;
+    fill: var(--ec-color-red);
+    stroke: var(--ec-color-red);
 }
 
 .ElectricCat #dialog_curves .green rect.handle {
-    fill: green;
-    stroke: green;
+    fill: var(--ec-color-green);
+    stroke: var(--ec-color-green);
 }
 
 .ElectricCat #dialog_curves .blue rect.handle {
-    fill: blue;
-    stroke: blue;
+    fill: var(--ec-color-blue);
+    stroke: var(--ec-color-blue);
 }
 
 .ElectricCat #dialog_curves rect.handle.selected {
-    fill: white;
+    fill: var(--ec-color-white);
 }
 
 .ElectricCat #photofilter_filters {
     width: 260px;
     height: 160px;
     overflow: scroll;
-    border: 1px black solid;
+    border: 1px var(--ec-color-black) solid;
 }
 
 .ElectricCat #photofilter_filters .filter_line {
     cursor: pointer;
-    background-color: white;
+    background-color: var(--ec-color-white);
     padding: 4px;
-    color: black;
+    color: var(--ec-color-black);
     width: 360px;
     height: 34px;
     -webkit-touch-callout: none;
-    /* iOS Safari */
     -webkit-user-select: none;
-    /* Safari*/
     -khtml-user-select: none;
-    /* Konqueror */
     -moz-user-select: none;
-    /* Firefox */
     -ms-user-select: none;
-    /* Internet Explorer/Edge */
     user-select: none;
 }
 
 .ElectricCat #photofilter_filters .filter_line:hover {
-    background-color: darkgray;
-    color: white;
+    background-color: var(--ec-photo-filter-hover);
+    color: var(--ec-color-white);
 }
 
 .ElectricCat #photofilter_filters .filter_line.selected {
-    background-color: dimgray;
-    color: white;
+    background-color: var(--ec-photo-filter-selected);
+    color: var(--ec-color-white);
 }
 
 .ElectricCat #photofilter_filters .filter_pal {
     display: block;
     float: left;
-    border: 1px solid black;
+    border: 1px solid var(--ec-color-black);
     width: 32px;
     height: 32px;
 }
