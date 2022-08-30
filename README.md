@@ -7,7 +7,7 @@ The software uses libraries and algorithms transcribed into JS from Gimp, ImageM
 
 At this stage of development (a hundred hours only), the software has only been tested on Google Chrome, on Macintosh. Thank you for using Chrome to test Electric Cat.
 
-Handled image formats are PNG, JPG and GIF (not animated).
+Handled image formats are PNG, JPG, WEBP and GIF (not animated).
 
 It is possible to undo the last 20 actions using the Edit / Undo menu.
 
