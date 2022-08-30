@@ -725,7 +725,7 @@
                                 }
                             }
                         }
-                    }, 50);
+                    }, 10);
                 });
             } else {
                 it.data('menu', false);
@@ -763,7 +763,7 @@
                         menu.addClass('hidden');
                         target.removeClass('over');
                     }
-                }, 50);
+                }, 10);
             });
         }
         parent.append(it);
