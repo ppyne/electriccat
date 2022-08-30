@@ -2282,16 +2282,21 @@ $(function() {
         onInit: function() {
         },
         onOpen: function() {
+            $('#dst').on('load', () => {
+                $('#grid').css('width', $('#dst').width());
+                $('#grid').css('height', $('#dst').height());
+            });
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
-            $('#grid').css('width', $('#dst').width());
-            $('#grid').css('height', $('#dst').height());
+            //$('#grid').css('width', $('#dst').width());
+            //$('#grid').css('height', $('#dst').height());
             $('#grid').removeClass('disabled');
         },
         onClose: function() {
             $('#arbi_rot_cw').attr('checked', true);
             $('#arbi_rot_angle').val(0);
             $('#grid').addClass('disabled');
+            $('#dst').off('load');
         },
         onOk: function() {
             var deg = parseFloat($('#arbi_rot_angle').val());
@@ -2319,6 +2324,7 @@ $(function() {
         onReset: function () {
             $('#arbi_rot_cw').prop('checked', true);
             $('#arbi_rot_angle').val(0);
+            $('#dst').attr('src', $('#src').attr('src'));
         }
     });
 });
