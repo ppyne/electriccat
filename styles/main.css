@@ -21,7 +21,8 @@ body.ElectricCat,
 
 body.ElectricCat {
     margin: 0;
-    background-image: url(../images/fond2.gif);
+    /*background-image: url(../images/fond2.gif);*/
+    background-color: #7F7F7F;
     font-family: Chicago, sans-serif;
     font-size: 12px;
 }
