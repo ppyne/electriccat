@@ -66,21 +66,21 @@
                 $this.addClass('hidden');
                 var bar = $this.children('.bar');
                 bar.mousedown(function (e) {
-                    self.Width = $this.width();
-                    self.Height = $this.height();
+                    self.Width = $this.outerWidth();
+                    self.Height = $this.outerHeight();
                     self.StartX = e.clientX;
                     self.StartY = e.clientY;
-                    self.OffsetX = $this.offset().left;
-                    self.OffsetY = $this.offset().top;
+                    self.OffsetX = $this.offset().left - $this.parent().offset().left;
+                    self.OffsetY = $this.offset().top - $this.parent().offset().top;
                     self.IsDown = true;
                     $(document).mousemove(function(evt) {
                         if (self.IsDown) {
                             var posx = self.OffsetX + evt.clientX - self.StartX;
                             var posy = self.OffsetY + evt.clientY - self.StartY;
                             if (posx < 0) posx = 0;
-                            else if (posx + 3 + self.Width > window.innerWidth) posx = window.innerWidth - self.Width - 3;
-                            if (posy < 20) posy = 20;
-                            else if (posy + 3 + self.Height > window.innerHeight) posy = window.innerHeight - self.Height - 3;
+                            else if (posx + self.Width > $this.parent().outerWidth()) posx = $this.parent().outerWidth() - self.Width;
+                            if (posy < 0) posy = 0;
+                            else if (posy + self.Height > $this.parent().outerHeight()) posy = $this.parent().outerHeight() - self.Height;
                             $this.css('left', posx + 'px');
                             $this.css('top', posy + 'px');
                         }

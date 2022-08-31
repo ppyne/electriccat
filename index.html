@@ -49,7 +49,6 @@ class CContext {
         else this.Colors = {grayscale: false, count: 0, palette: []};
     }
     changeDepth(depth) {
-        
         this.Depth = depth;
         var self = this;
         $('.layer').show({duration:0, complete: function () {
@@ -92,10 +91,138 @@ class CState {
             }
         }
     }
+    reset() {
+        this.States = new Array();
+        $('#miundo').addClass('disabled');
+        $('#miundo').html('Undo');
+    }
 }
 
 var Context = new CContext();
 var State = new CState();
+
+const ZOOMS = [
+        0.001, 0.002, 0.003, 0.004, 0.005, 0.0075,
+        0.01, 0.015, 0.02, 0.03, 0.04, 0.05, 0.0625, 1.0 / 12.0 /* 0.08333... */,
+        0.125, 1.0 / 6.0 /* 0.1666... */, 0.25, 1.0 / 3.0 /* 0.333... */, 0.5, 2.0 / 3.0 /* 0.666... */, 
+        1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 12.0, 16.0, 32.0, 64.0, 128.0
+];
+
+let saveCurrentZoom = () => {
+    let $zoom = $('#zoom');
+    $zoom.data('saved', $zoom.val());
+};
+
+let restoreSavedZoom = () => {
+    let $zoom = $('#zoom');
+    $zoom.val($zoom.data('saved'));
+    setZoom($('#src'));
+    setZoom($('#dst'));
+};
+
+let zoomFitsWorkArea = () => {
+    let $viewport = $('#workingarea');
+    let vw = $viewport.width();
+    let vh = $viewport.height();
+    let $container = $('#src');
+    let cw = $container.width();
+    let ch = $container.height();
+    if (cw > vw || ch > vh) return false;
+    else if (cw < 16 || ch < 16) return false;
+    return true;
+};
+
+let zoomFitToWorkArea = () => {
+    let $viewport = $('#workingarea');
+    let vw = $viewport.width();
+    let vh = $viewport.height();
+    let $container = $('#src');
+    let cw = $container.get(0).width;
+    let ch = $container.get(0).height;
+    let Z = 0;
+    let exceeded = false;
+    for (zoom of ZOOMS) {
+        w = cw * zoom;
+        h = ch * zoom;
+        if (w > vw || h > vh) {
+            exceeded = true;
+            break;
+        }
+        Z++;
+    }
+    let r = 1.0;
+    if (Z === 0 || (Z === ZOOMS.length - 1 && !exceeded)) r = ZOOMS[Z];
+    else r = ZOOMS[Z-1];
+    setZoom($('#src'), r);
+    setZoom($('#dst'), r);
+    $('#zoom').val(r);
+};
+
+let setZoom = ($selector, r) => {
+    if (r === undefined) r = $('#zoom').val();
+    if (r < 1.0) $selector.css('image-rendering', 'auto');
+    else $selector.css('image-rendering', 'pixelated');
+    $selector.css('transform', 'scale('+r+')');
+};
+
+let resetZoom = () => {
+    $zoom = $('#zoom');
+    $zoom.val($('option.nozoom', $zoom).val());
+    setZoom($('#src'));
+    setZoom($('#dst'));
+};
+
+let coordToImage = (coord) => {
+
+    let r = parseFloat($('#zoom').val());
+    return Math.round(coord / r);
+};
+
+let removeTrailingZeros = (str) => {
+    return str.replace(/0+$/, '').replace(/\.$/, '');
+};
+
+let disableRidiculousZoomLevels = () => {
+    let w = $('#src').get(0).width;
+    let h = $('#src').get(0).height;
+    const min = 16;
+    options = $('#zoom option');
+    for (let i = 0; i < ZOOMS.length; i++) {
+        if (ZOOMS[i] < 1) {
+            let zw = Math.round(w * ZOOMS[i]);
+            let zh = Math.round(h * ZOOMS[i]);
+            if (zw < min || zh < min) $(options[i]).prop('disabled', true);
+            else $(options[i]).prop('disabled', false);
+        } else break;
+    }
+}
+
+$(() => {
+    for (let zoom of ZOOMS) {
+        let $option = $('<option />');
+        $option.val(zoom);
+        $option.text(removeTrailingZeros((zoom*100.0).toFixed(3))+'%');
+        if (zoom === 1.0) {
+            $option.prop('selected', true);
+            $option.addClass('nozoom');
+        }
+        $('#zoom').append($option);
+    }
+    $('#zoom').on('change', () => {
+        let r = $('#zoom').val();
+        setZoom($('#src'));
+        setZoom($('#dst'));
+    });
+    $('#zoom100Button').on('click', resetZoom);
+    $('#fitButton').on('click', zoomFitToWorkArea);
+});
+
+let resetDst = () => {
+    $('#dst').remove();
+    $dst = $('<img id="dst" />');
+    $('#containment').append($dst);
+    setZoom($dst);
+}
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || '';
@@ -600,6 +727,7 @@ function makeRotate90CW() {
     ctx.drawImage(img, -img.width/2,-img.height/2);
     State.save("Rotate 90° CW");
     $('#src').attr('src', canvas.toDataURL('image/png'));
+    updateStatusBarDimensions();
 }
 
 function makeRotate90CCW() {
@@ -614,6 +742,7 @@ function makeRotate90CCW() {
     ctx.drawImage(img, -img.width/2,-img.height/2);
     State.save("Rotate 90° CCW");
     $('#src').attr('src', canvas.toDataURL('image/png'));
+    updateStatusBarDimensions();
 }
 
 function makeRotate(deg) {
@@ -631,8 +760,7 @@ function makeRotate(deg) {
 }
 
 function makeCancel() {
-    $('#dst').remove();
-    $('#containment').append('<img id="dst">');
+    resetDst();
 }
 
 function updateMenuMode(closing) {
@@ -825,33 +953,43 @@ function makeOpenFile() {
 
 function makeOpen(src, name, type) {
     if (src.length > 0) {
-
-            State.save("Open");
-            $('#src').removeAttr('src');
-            $('#src').on('load', function() {
-                var dep = 'RGB';
-                var info = analyseColors();
-                if (info.grayscale) dep = 'Grayscale';
-                else if (info.count <= 256) {
-                    if (info.bitmap) {
-                        dep = 'Bitmap';
-                    } else {
-                        dep = 'Indexed';
-                    }
+        resetZoom();
+        State.save("Open");
+        $('#src').removeAttr('src');
+        $('#src').on('load', function() {
+            var dep = 'RGB';
+            var info = analyseColors();
+            if (info.grayscale) dep = 'Grayscale';
+            else if (info.count <= 256) {
+                if (info.bitmap) {
+                    dep = 'Bitmap';
+                } else {
+                    dep = 'Indexed';
                 }
-                Context = new CContext(dep, name, type, info);
-                enableMenusOnOpen();
-            });
-            $('#src').attr('src', src);
+            }
+            Context = new CContext(dep, name, type, info);
+            enableMenusOnOpen();
+            disableRidiculousZoomLevels();
+            $('#statusbar .zoomtools').show();
+            updateStatusBarDimensions();
+            $('#statusbar .dimensions').show();
+        });
+        $('#src').attr('src', src);
     }
+}
+
+function updateStatusBarDimensions() {
+    $('.dimensions').text('Dimensions: '+$('#src').get(0).width+'px × '+$('#src').get(0).height+'px');
 }
 
 function makeClose() {
     $('#src').remove();
     $('#containment').append('<img id="src">');
     disableMenusOnClose();
+    State.reset();
+    $('#statusbar .zoomtools').hide();
+    $('#statusbar .dimensions').hide();
 }
-
 
 function makeSave() {
     var url = '';
@@ -890,11 +1028,6 @@ function makeOk(caption) {
     makeCancel();
 }
 
-function onWindowResize() {
-    $('#workingarea').css('width', window.innerWidth+'px');
-    $('#workingarea').css('height', (window.innerHeight-20)+'px');
-}
-
 $(function() {
     $('#menu').Menu();
     var dropZone = $('#workingarea').get(0);
@@ -902,11 +1035,6 @@ $(function() {
     dropZone.addEventListener('drop', handleFileSelect, false);
     
     $('#fileinput').change(makeOpenFile);
-
-
-    
-
-
 
 /*    $('#dialog_generic').Dialog({
         onInit: function() {
@@ -932,8 +1060,6 @@ $(function() {
 
     $('#dialog_levels .btn_apply').trigger('click');
     $('#dialog_monochrome .btn_apply').trigger('click');
-    onWindowResize();
-    $(window).resize(onWindowResize);
 });
 
 </script>
@@ -2213,20 +2339,22 @@ $(function() {
             });
         },
         onOpen: function() {
-            $('#resize_width').val($('#src').width());
-            $('#resize_height').val($('#src').height());
-            resize_width_ratio = parseFloat($('#src').width()) / parseFloat($('#src').height());
-            resize_height_ratio = parseFloat($('#src').height()) / parseFloat($('#src').width());
+            $('#resize_width').val($('#src').get(0).width);
+            $('#resize_height').val($('#src').get(0).height);
+            resize_width_ratio = parseFloat($('#src').get(0).width) / parseFloat($('#src').get(0).height);
+            resize_height_ratio = parseFloat($('#src').get(0).height) / parseFloat($('#src').get(0).width);
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
         },
         onClose: function() {
+            $('#resize_algo').val('bicubic');
             $('#resize_prop').prop('checked', true);
         },
         onOk: function() {
             makeResize();
             $('#src').show();
             makeOk("Resize");
+            updateStatusBarDimensions();
         },
         onCancel: function() {
             $('#src').show();
@@ -2236,10 +2364,11 @@ $(function() {
             makeResize();
         },
         onReset: function () {
-            $('#resize_width').val($('#src').width());
-            $('#resize_height').val($('#src').height());
-            $('#dst').attr('src', $('#src').attr('src'));
+            $('#resize_width').val($('#src').get(0).width);
+            $('#resize_height').val($('#src').get(0).height);
+            $('#resize_algo').val('bicubic');
             $('#resize_prop').prop('checked', true);
+            $('#dst').attr('src', $('#src').attr('src'));
         }
     });
 });
@@ -2256,7 +2385,7 @@ $(function() {
                 <fieldset class="white">
                     <div style="margin-top:3px;"><label for="resize_width" style="display:inline-block;width:70px;">Width: </label><input id="resize_width" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
                     <div style="margin-top:6px;"><label for="resize_height" style="display:inline-block;width:70px;">Height: </label><input id="resize_height" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
-                    <div style="margin-top:10px;"><label for="resize_algo" style="display:inline-block;width:70px;">Algorithm: </label><select id="resize_algo" style="text-align:right;">
+                    <div style="margin-top:10px;"><label for="resize_algo" style="display:inline-block;width:70px;">Algorithm: </label><select id="resize_algo" style="text-align:left;">
                     <option value="nearest">Nearest Neighbor (rough)</option>
                     <option value="bicubic" selected>Bicubic (precise)</option>
                     <option value="bilinear">Bilinear (medium quality)</option>
@@ -2282,21 +2411,22 @@ $(function() {
         onInit: function() {
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             $('#dst').on('load', () => {
-                $('#grid').css('width', $('#dst').width());
-                $('#grid').css('height', $('#dst').height());
+                $('#grid').css('width', $('#dst').get(0).width);
+                $('#grid').css('height', $('#dst').get(0).height);
             });
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
-            //$('#grid').css('width', $('#dst').width());
-            //$('#grid').css('height', $('#dst').height());
             $('#grid').removeClass('disabled');
         },
         onClose: function() {
-            $('#arbi_rot_cw').attr('checked', true);
+            $('#arbi_rot_cw').prop('checked', true);
             $('#arbi_rot_angle').val(0);
             $('#grid').addClass('disabled');
             $('#dst').off('load');
+            restoreSavedZoom();
         },
         onOk: function() {
             var deg = parseFloat($('#arbi_rot_angle').val());
@@ -2306,6 +2436,7 @@ $(function() {
             $('#dst').attr('src', makeRotate(deg));
             makeOk("Arbitrary Rotation");
             $('#src').show();
+            updateStatusBarDimensions();
         },
         onCancel: function() {
             $('#src').show();
@@ -2318,8 +2449,8 @@ $(function() {
             $('#arbi_rot_angle').val(deg);
             if ($('#arbi_rot_ccw').is(':checked')) deg = -deg;
             $('#dst').attr('src', makeRotate(deg));
-            $('#grid').css('width', $('#dst').width());
-            $('#grid').css('height', $('#dst').height());
+            $('#grid').css('width', $('#dst').get(0).width);
+            $('#grid').css('height', $('#dst').get(0).height);
         },
         onReset: function () {
             $('#arbi_rot_cw').prop('checked', true);
@@ -2337,8 +2468,8 @@ $(function() {
             <div class="main">
                 <fieldset class="white">
                     <div style="margin-top:3px;"><label for="arbi_rot_angle" style="display:inline-block;width:60px;">Angle: </label><input id="arbi_rot_angle" type="text" value="0" maxlength="5" size="5" style="text-align:right;"> °</div>
-                    <div style="margin-top:10px;"><input type="radio" id="arbi_rot_cw" checked name="arbi_rot_cw"><label for="arbi_rot_cw" style="display:inline-block;"> Clockwise</label></div>
-                    <div style="margin-top:0px;"><input type="radio" id="arbi_rot_ccw" name="arbi_rot_cw"><label for="arbi_rot_ccw" style="display:inline-block;"> Counterclockwise</label></div>
+                    <div style="margin-top:10px;"><input type="radio" id="arbi_rot_cw" checked name="arbi_rot"><label for="arbi_rot_cw" style="display:inline-block;"> Clockwise</label></div>
+                    <div style="margin-top:0px;"><input type="radio" id="arbi_rot_ccw" name="arbi_rot"><label for="arbi_rot_ccw" style="display:inline-block;"> Counterclockwise</label></div>
                 </fieldset>
             </div>
             <div class="buttons">
@@ -2377,14 +2508,15 @@ function showSelection() {
     $('#crop_containment').height(height);
     $('#emptylayer').append('<svg id="mask" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><path id="maskpath" d="M0,0v1h1V0H0z"/></svg>');
     $(window).on('resize', updateMask);
+    let r = $('#zoom').val();
     $('#selection').Selection({
         onChange: function(x, y, width, height, $this) {
             $('#mask').data('params', {x:x, y:y, width:width, height:height, offsetLeft:$this.offset().left, offsetTop:$this.offset().top});
             updateMask();
-            $('#crop_x').val(x);
-            $('#crop_y').val(y);
-            $('#crop_w').val(width);
-            $('#crop_h').val(height);
+            $('#crop_x').val(Math.round(x/r));
+            $('#crop_y').val(Math.round(y/r));
+            $('#crop_w').val(Math.round(width/r));
+            $('#crop_h').val(Math.round(height/r));
         }
     });
     $('#crop_asprat').on('change', changeSelectionAspRat);
@@ -2428,13 +2560,17 @@ $(function() {
         onInit: function() {
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             showSelection();
         },
         onClose: function() {
+            restoreSavedZoom();
         },
         onOk: function() {
             makeCrop();
             hideSelection();
+            updateStatusBarDimensions();
         },
         onCancel: function() {
             hideSelection();
@@ -3378,8 +3514,8 @@ function showNub(nub1, nub2) {
     $('#nub_containment').append('<div id="nub1"></div>');
     $('#nub1').Nub({
         onChange(x, y) {
-            $(nub1.xid).val(x);
-            $(nub1.yid).val(y);
+            $(nub1.xid).val(coordToImage(x));
+            $(nub1.yid).val(coordToImage(y));
             if (window.nubline) {
                 window.nub1posx = x;
                 window.nub1posy = y;
@@ -3392,8 +3528,8 @@ function showNub(nub1, nub2) {
         $('#nub_containment').append('<div id="nub2"></div>');
         $('#nub2').Nub({
             onChange(x, y) {
-                $(nub2.xid).val(x);
-                $(nub2.yid).val(y);
+                $(nub2.xid).val(coordToImage(x));
+                $(nub2.yid).val(coordToImage(y));
                 if (window.nubline) {
                     window.nub2posx = x;
                     window.nub2posy = y;
@@ -3442,6 +3578,8 @@ $(function() {
             $('#pinch_radius_bar').barInput({Min:0, Max:600, Default:200, Label:'Radius'});
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
             showNub({xid:'#pinch_x', yid:'#pinch_y'});
@@ -3451,6 +3589,7 @@ $(function() {
             $('#pinch_strength_bar').barInput('reset');
             $('#pinch_radius_bar').barInput('reset');
             hideNub({xid:'#pinch_x', yid:'#pinch_y'});
+            restoreSavedZoom();
         },
         onOk: function() {
             $('#dst').attr('src', makePinch());
@@ -3516,12 +3655,15 @@ $(function() {
             $('#zoom_strength_bar').barInput({Min:0, Max:100, Default:40, Label:'Strength'});
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             showNub({xid:'#zoom_x', yid:'#zoom_y'});
         },
         onClose: function() {
             $('#zoom_strength_bar').barInput('reset');
             $('#zoom_radius_bar').barInput('reset');
             hideNub({xid:'#zoom_x', yid:'#zoom_y'});
+            restoreSavedZoom();
         },
         onOk: function() {
             $('#dst').attr('src', makeZoom());
@@ -3588,6 +3730,8 @@ $(function() {
             $('#twirl_radius_bar').barInput({Min:0, Max:600, Default:200, Label:'Radius'});
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
             showNub({xid:'#twirl_x', yid:'#twirl_y'});
@@ -3597,6 +3741,7 @@ $(function() {
             $('#twirl_angle_bar').barInput('reset');
             $('#twirl_radius_bar').barInput('reset');
             hideNub({xid:'#twirl_x', yid:'#twirl_y'});
+            restoreSavedZoom();
         },
         onOk: function() {
             $('#dst').attr('src', makeTwirl());
@@ -3683,6 +3828,8 @@ $(function() {
             });
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
             showNub({xid:'#halftone_x', yid:'#halftone_y'});
@@ -3693,6 +3840,7 @@ $(function() {
             $('#halftone_size_bar').barInput('reset');
             $('#halftone_bw').prop('checked', false);
             hideNub({xid:'#halftone_x', yid:'#halftone_y'});
+            restoreSavedZoom();
         },
         onOk: function() {
             $('#dst').attr('src', makeHalftone());
@@ -4243,6 +4391,8 @@ $(function() {
             $('#hexagonalpixelate_bar').barInput({Min:5, Max:100, Default:20, Label:'Scale'});
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
             showNub({xid:'#hexagonalpixelate_x', yid:'#hexagonalpixelate_y'});
@@ -4251,6 +4401,7 @@ $(function() {
             $('#src').show();
             $('#hexagonalpixelate_bar').barInput('reset');
             hideNub({xid:'#hexagonalpixelate_x', yid:'#hexagonalpixelate_y'});
+            restoreSavedZoom();
         },
         onOk: function() {
             $('#dst').attr('src', makeHexagonalPixelate());
@@ -4392,6 +4543,8 @@ $(function() {
             $('#tiltshift_gradiant_bar').barInput({Min:0, Max:400, Default:200, Label:'Gradient Radius'});
         },
         onOpen: function() {
+            saveCurrentZoom();
+            if (!zoomFitsWorkArea()) zoomFitToWorkArea();
             $('#dst').attr('src', $('#src').attr('src'));
             $('#src').hide();
             showNub({xid:'#tiltshift_A_x', yid:'#tiltshift_A_y'}, {xid:'#tiltshift_B_x', yid:'#tiltshift_B_y'});
@@ -4400,6 +4553,7 @@ $(function() {
             $('#src').show();
             $('#tiltshift_blur_bar').barInput('reset');
             hideNub({xid:'#tiltshift_A_x', yid:'#tiltshift_A_y'}, {xid:'#tiltshift_B_x', yid:'#tiltshift_B_y'});
+            restoreSavedZoom();
         },
         onOk: function() {
             $('#dst').attr('src', makeTiltShift());
@@ -5253,5 +5407,6 @@ $(function() {
 
     <div id="containment"><img id="src"><img id="dst"><div id="grid" class="disabled"></div></div>
 </div>
+<div id="statusbar"><span class="zoomtools" style="display:none;">Zoom: <select id="zoom"></select><button id="fitButton" type="button">Fit</button><button id="zoom100Button" type="button">100%</button></span><span class="dimensions"></span></div>
 </body>
 </html>

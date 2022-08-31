@@ -1,4 +1,8 @@
 :root {
+    --ec-menu-height: 20px;
+    --ec-workingarea-padding: 30px;
+    --ec-statusbar-height: 20px;
+    --ec-statusbar-bgcolor: silver;
     --ec-color-red: red;
     --ec-color-green: green;
     --ec-color-blue: blue;
@@ -9,6 +13,7 @@
     --ec-color-light-gray: whitesmoke;
     --ec-nub-color: #007FFF;
     --ec-nub-shadow-color: rgba(0, 0, 0, 0.7); 
+    --ec-layer-bgcolor: rgba(0, 0, 0, 0.0);
     --ec-curves-bgcolor: #FCFCFC;
     --ec-curves-bgimage: url(../images/curves_bg.png);
     --ec-curves-bgimage-red: url(../images/curves_bg_red.png);
@@ -42,15 +47,13 @@
 }
 
 html,
-body.ElectricCat,
-.ElectricCat #workingarea {
-    width: 100%;
+body.ElectricCat {
+    width: 100vw;
     height: 100vh;
 }
 
 body.ElectricCat {
     margin: 0;
-    /*background-image: url(../images/fond2.gif);*/
     background-color: var(--ec-color-medium-gray);
     font-family: Chicago, sans-serif;
     font-size: 12px;
@@ -71,17 +74,51 @@ body.ElectricCat {
     width: 100%;
     height: 100%;
     z-index: 2900;
-    background-color: rgba(0, 0, 0, 0.0);
+    background-color: var(--ec-layer-bgcolor);
     top: 0;
     left: 0;
 }
 
 .ElectricCat #workingarea {
-    padding: 20px;
+    width: calc(100vw);
+    height: calc(100vh - var(--ec-menu-height) - var(--ec-statusbar-height));
+    padding: var(--ec-workingarea-padding);
+    position: relative;
+    overflow: auto;
     box-sizing: border-box;
-    overflow: scroll;
-    left: 0;
-    top: 20px;
+}
+
+.ElectricCat #statusbar {
+    width: 100vw;
+    height: var(--ec-statusbar-height);
+    background-color: var(--ec-statusbar-bgcolor);
+    overflow: hidden;
+    padding-top: 1px;
+    padding-left: 12px;
+    box-sizing: border-box;
+}
+
+.ElectricCat #statusbar .zoomtools {
+    position: relative;
+    height: var(--ec-statusbar-height);
+    overflow: hidden;
+}
+.ElectricCat #statusbar .zoomtools select {
+    font-size: 10px;
+    border: 1px solid var(--ec-color-black);
+    border-radius: 3px;
+}
+.ElectricCat #statusbar .zoomtools button {
+    font-size: 10px;
+    padding: 0 7px;
+    border-radius: 3px;
+    margin-left: 7px;
+}
+
+.ElectricCat #statusbar .dimensions {
+    position: relative;
+    height: var(--ec-statusbar-height);
+    margin-left: 12px;
 }
 
 .ElectricCat input[type=text] {
@@ -427,6 +464,7 @@ body.ElectricCat {
 .ElectricCat #src,
 .ElectricCat #dst,
 .ElectricCat #grid {
+    display: block;
     position: absolute;
     top: 0;
     left: 0;
@@ -434,6 +472,9 @@ body.ElectricCat {
 
 .ElectricCat #containment {
     position: relative;
+    width: 0;
+    height: 0;
+    overflow: visible;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -443,15 +484,19 @@ body.ElectricCat {
 }
 
 .ElectricCat #src {
+    image-rendering: pixelated;
+    transform-origin: top left;
     z-index: 1501;
 }
 
 .ElectricCat #dst {
+    image-rendering: pixelated;
+    transform-origin: top left;
     z-index: 1502;
 }
 
 .ElectricCat #grid {
-    display: inline-block;
+    display: block;
     background-image: var(--ec-rotate-grid);
     background-position: center center;
     z-index: 1505;
