@@ -992,34 +992,73 @@ function makeClose() {
 }
 
 function makeSave() {
-    var url = '';
-    var data = {
-        Mime: 'image/png',
-        Base64: ''
-    };
-    var blob = null;
-    if (Context.Depth == 'Bitmap') {
-        blob = toBitmapPNG();
-    } else if (Context.Depth == 'Indexed') {
-        blob = toIndexedPNG();
-    } else if (Context.Depth == 'Grayscale') {
-        blob = toGrayscalePNG();
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    if (params?.path !== undefined && params?.mimetype !== undefined && params?.id !== undefined) {
+        if (['image/png', 'image/jpeg'].includes(params.mimetype)) {
+            var img = $('#src').get(0);
+            var canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            let urlData;
+            if (params.mimetype === 'image/jpeg') urlData = canvas.toDataURL('image/jpeg', 0.8);
+            else urlData = canvas.toDataURL('image/png');
+            let data = urlToB64(urlData);
+            let blob = b64toBlob(data.Base64, data.Mime);
+            console.log('blob.size', blob.size);
+
+            var fd = new FormData();
+            fd.append('id', params.id);
+            fd.append('width', img.width);
+            fd.append('height', img.height);
+            fd.append('data', blob);
+            $.ajax({
+                type: 'POST',
+                url: params.path,
+                data: fd,
+                processData: false,
+                contentType: false
+            }).done(function(data) {
+                console.log('broadcasting', data);
+                window.broadcastChannel.postMessage(data);
+            }).fail((data) => {
+                console.log('save fail', data);
+            });
+        } else {
+            $('#mb_saveUnsupportedFormat').messageBox('open');
+        }
     } else {
-        url = $('#src').attr('src');
-        data = urlToB64(url);
-        blob = b64toBlob(data.Base64, data.Mime);
+        var url = '';
+        var data = {
+            Mime: 'image/png',
+            Base64: ''
+        };
+        var blob = null;
+        if (Context.Depth == 'Bitmap') {
+            blob = toBitmapPNG();
+        } else if (Context.Depth == 'Indexed') {
+            blob = toIndexedPNG();
+        } else if (Context.Depth == 'Grayscale') {
+            blob = toGrayscalePNG();
+        } else {
+            url = $('#src').attr('src');
+            data = urlToB64(url);
+            blob = b64toBlob(data.Base64, data.Mime);
+        }
+        
+        var name = Context.Name.match(/^(.*)\./);
+        var finalname = Context.Name;
+        if (name !== null) {
+            finalname = finalname = name[1];
+        }
+        if (data.Mime == 'image/png') finalname += '.png';
+        else if (data.Mime == 'image/webp') finalname += '.webp';
+        else if (data.Mime == 'image/jpg' | data.Mime == 'image/jpeg') finalname += '.jpg';
+        else if (data.Mime == 'image/gif') finalname += '.gif';
+        saveAs(blob, finalname);
     }
-    
-    var name = Context.Name.match(/^(.*)\./);
-    var finalname = Context.Name;
-    if (name !== null) {
-        finalname = finalname = name[1];
-    }
-    if (data.Mime == 'image/png') finalname += '.png';
-    else if (data.Mime == 'image/webp') finalname += '.webp';
-    else if (data.Mime == 'image/jpg' | data.Mime == 'image/jpeg') finalname += '.jpg';
-    else if (data.Mime == 'image/gif') finalname += '.gif';
-    saveAs(blob, finalname);
 }
 
 function makeOk(caption) {
@@ -1028,7 +1067,7 @@ function makeOk(caption) {
     makeCancel();
 }
 
-$(function() {
+$(() => {
     $('#menu').Menu();
     var dropZone = $('#workingarea').get(0);
     dropZone.addEventListener('dragover', handleDragOver, false);
@@ -1060,6 +1099,8 @@ $(function() {
 
     $('#dialog_levels .btn_apply').trigger('click');
     $('#dialog_monochrome .btn_apply').trigger('click');
+    $('#mb_saveUnsupportedFormat').messageBox({text:'Only mime types image/jpeg and image/png are currently handled.'});
+    window.broadcastChannel = new BroadcastChannel('electriccat');
 });
 
 </script>
@@ -1069,7 +1110,7 @@ $(function() {
 <div style="position:absolute; width:0; height:0; left:-100px; top:-100px;"><input type="file" id="fileinput"><audio id="beep"><source src="beep.mp3" type="audio/mpeg" /></audio></div>
 <div id="menu"></div>
 <div id="workingarea">
-    
+    <div id="mb_saveUnsupportedFormat" class="messageBox error"></div>
 <script>
 function makeValueHistogram(img, dst) {
     if (img.width == 0 || img.height == 0) return null;
@@ -1314,7 +1355,6 @@ $(function() {
     });
 });
 </script>    
-    
     <div class="dialog" id="dialog_levels">
         <div class="bar"><div class="caption">Levels</div></div>
         <div class="border">
