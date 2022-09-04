@@ -59,6 +59,10 @@ body.ElectricCat {
     font-size: 12px;
 }
 
+body.ElectricCat.working * {
+    cursor: wait;
+}
+
 .ElectricCat label {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

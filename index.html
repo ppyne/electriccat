@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="styles/main.css">
 <link rel="stylesheet" href="styles/menu.css">
 <link rel="stylesheet" href="styles/bars.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="scripts/grafi-despeckle.js"></script>
 <script src="scripts/grafi.js"></script>
 <script src="scripts/filters.js"></script>
@@ -74,6 +74,17 @@
     };
 </script>
 <script>
+
+let working = async (cb) => {
+    if (cb.constructor.name === 'AsyncFunction') {
+        $('body').addClass('working');
+        setTimeout(async () => {
+            await cb();
+            $('body').removeClass('working');
+        }, 100);
+    } else console.error('Working callback must be an async function.');
+};
+
 Error.stackTraceLimit=Infinity;
 
 class CContext {
@@ -255,13 +266,6 @@ $(() => {
     $('#zoom100Button').on('click', resetZoom);
     $('#fitButton').on('click', zoomFitToWorkArea);
 });
-
-let resetDst = () => {
-    $('#dst').remove();
-    $dst = $('<img id="dst" />');
-    $('#containment').append($dst);
-    setZoom($dst);
-}
 
 function b64toBlob(b64Data, contentType, sliceSize) {
   contentType = contentType || '';
@@ -698,19 +702,22 @@ function makePseudocolor() {
     $('#src').attr('src', canvas.toDataURL('image/png'));
 }
 
-function makeDespeckle() {
-    var img = $('#src').get(0);
-    if (img.width == 0 || img.height == 0) return null;
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var imageData = ctx.getImageData(0,0,img.width, img.height);
-    ctx.putImageData(despeckle(imageData), 0, 0);
-    State.save("Despeckle");
-    $('#src').attr('src', canvas.toDataURL('image/png'));
-}
+let makeDespeckle = async () => {
+    await working(async () => {
+        var img = $('#src').get(0);
+        if (img.width == 0 || img.height == 0) return null;
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var imageData = ctx.getImageData(0,0,img.width, img.height);
+        ctx.putImageData(despeckle(imageData), 0, 0);
+        State.save("Despeckle");
+        $('#src').attr('src', canvas.toDataURL('image/png'));
+        $('body').removeClass('working');
+    });
+};
 
 function makeFlipHorizontal() {
     var img = $('#src').get(0);
@@ -799,7 +806,10 @@ function makeRotate(deg) {
 }
 
 function makeCancel() {
-    resetDst();
+    $('#dst').remove();
+    $dst = $('<img id="dst" />');
+    $('#containment').append($dst);
+    setZoom($dst);
 }
 
 function updateMenuMode(closing) {
@@ -1100,14 +1110,10 @@ function makeSave() {
     }
 }
 
-function makeOk(caption, cb = undefined) {
+function makeOk(caption) {
     State.save(caption);
-    $('#src').on('load', () => {
-        if (typeof cb === 'function') cb();
-        makeCancel();
-        $('#src').off('load');
-    });
     $('#src').attr('src', $('#dst').attr('src'));
+    makeCancel();
 }
 
 $(() => {
@@ -2325,7 +2331,7 @@ $(function() {
     
     
 <script>
-function makeResize() {
+let makeResize = async () => {
     let w = parseInt($('#resize_width').val());
     let h = parseInt($('#resize_height').val());
     if (isNaN(w)) {
@@ -2348,8 +2354,10 @@ function makeResize() {
         $('#resize_height').val(h);
         $('#resize_height').get(0).select();
     }
-    if ($('#resample_filter').val() === 'Gaussian') IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val(), parseFloat($('#gaussian_sigma').val()));
-    else IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val());
+    $('body').addClass('working');
+    if ($('#resample_filter').val() === 'Gaussian') await IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val(), parseFloat($('#gaussian_sigma').val()));
+    else await IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val());
+    $('body').removeClass('working');
 }
 
 var resize_width_ratio = 0;
@@ -2412,25 +2420,24 @@ $(function() {
             $('#src').hide();
         },
         onClose: function() {
+            console.log('closing');
             $('#resample_filter').val('');
             $('#resize_gaussian_options').hide();
             $('#gaussian_sigma').val('0.5');
             $('#resize_prop').prop('checked', true);
         },
-        onOk: function() {
-            makeResize();
-            
-            makeOk("Resize", () => {
-                $('#src').show();
-            });
+        onOk: async () => {
+            await makeResize();
+            $('#src').show();
+            makeOk("Resize");
             updateStatusBarDimensions();
         },
         onCancel: function() {
             $('#src').show();
             makeCancel();
         },
-        onApply: function () {
-            makeResize();
+        onApply: async () => {
+            await makeResize();
         },
         onReset: function () {
             $('#resize_width').val($('#src').get(0).width);
