@@ -2412,7 +2412,7 @@ $(function() {
             $('#src').hide();
         },
         onClose: function() {
-            $('#resample_filter').val('Catrom');
+            $('#resample_filter').val('');
             $('#resize_gaussian_options').hide();
             $('#gaussian_sigma').val('0.5');
             $('#resize_prop').prop('checked', true);
@@ -2435,7 +2435,7 @@ $(function() {
         onReset: function () {
             $('#resize_width').val($('#src').get(0).width);
             $('#resize_height').val($('#src').get(0).height);
-            $('#resample_filter').val('Catrom');
+            $('#resample_filter').val('');
             $('#resize_gaussian_options').hide();
             $('#gaussian_sigma').val('0.5');
             $('#resize_prop').prop('checked', true);
@@ -2458,22 +2458,35 @@ $(function() {
                     <div style="margin-top:6px;"><label for="resize_height" style="display:inline-block;width:70px;">Height: </label><input id="resize_height" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
                     <div style="margin-top:10px;"><input type="checkbox" id="resize_prop" checked><label for="resize_prop" style="display:inline-block;"> Constrain Proportions</label></div>
                     <div style="margin-top:10px;"><label for="resample_filter" style="display:inline-block;width:70px;">Filter: </label><select id="resample_filter" style="text-align:left;">
+                        <option value="Bartlett">Bartlett</option>
                         <option value="Blackman">Blackman</option>
+                        <option value="Bohman">Bohman</option>
                         <option value="Box">Box</option>
-                        <option value="Catrom" selected>Catrom</option>
+                        <option value="Catrom">Catrom</option>
+                        <option value="Cosine">Cosine</option>
                         <option value="Cubic">Cubic</option>
+                        <option value="" selected>Automatic (default)</option>
                         <option value="Gaussian">Gaussian</option>
-                        <option value="Hamming">Hamming</option>
+                        <option value="Hann">Hann</option>
                         <option value="Hanning">Hanning</option>
                         <option value="Hermite">Hermite</option>
+                        <option value="Jinc">Jinc</option>
+                        <option value="Kaiser">Kaiser</option>
                         <option value="Lagrange">Lagrange</option>
-                        <option value="Lanczos">Lanczos</option>
-                        <option value="Mitchell">Mitchell</option>
+                        <option value="Lanczos">Lanczos (for shrinking)</option>
+                        <option value="LanczosSharp">LanczosSharp</option>
+                        <option value="Lanczos2">Lanczos2</option>
+                        <option value="Lanczos2Sharp">Lanczos2Sharp</option>
+                        <option value="Mitchell">Mitchell (for enlargement)</option>
+                        <option value="Parzen">Parzen</option>
                         <option value="Point">Point</option>
-                        <option value="">No Filter (default)</option>
                         <option value="Quadratic">Quadratic</option>
+                        <option value="Robidoux">Robidoux</option>
+                        <option value="RobidouxSharp">RobidouxSharp</option>
                         <option value="Sinc">Sinc</option>
+                        <option value="Spline">Spline</option>
                         <option value="Triangle">Triangle</option>
+                        <option value="Welch">Welch</option>
                     </select></div>
                     <div id="resize_gaussian_options" style="display:none;">
                         <div style="margin-top:3px;"><label for="gaussian_sigma" style="display:inline-block;width:70px;">Sigma: </label><input id="gaussian_sigma" type="text" value="0.5" maxlength="4" size="4" style="text-align:right;"></div>
