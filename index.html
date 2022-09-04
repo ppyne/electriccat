@@ -39,7 +39,7 @@
     import * as Magick from './scripts/magickApi.js';
 
     // Adding ImageMagick resize function
-    window.IMResize = async ($src, width, height, $dst, filter = '') => {
+    window.IMResize = async ($src, width, height, $dst, filter = '', extra = undefined) => {
         let name = 'src.png';
         let dims = width+'x'+height+'!';
 
@@ -59,7 +59,10 @@
         
             const files = [{ 'name': name, 'content': sourceBytes }];
             let command = ['convert', name, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
-            if (filter !== '') command = ['convert', name, '-filter', filter, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
+            if (filter !== '') {
+                if (filter === 'Gaussian' && typeof extra === 'number') command = ['convert', name, '-define', 'filter:sigma='+extra.toString(), '-filter', filter, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
+                else command = ['convert', name, '-filter', filter, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
+            }
             let processedFiles = await Magick.Call(files, command);
         
             let firstOutputImage = processedFiles[0];
@@ -2345,14 +2348,22 @@ function makeResize() {
         $('#resize_height').val(h);
         $('#resize_height').get(0).select();
     }
-    IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val());
+    if ($('#resample_filter').val() === 'Gaussian') IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val(), parseFloat($('#gaussian_sigma').val()));
+    else IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val());
 }
 
 var resize_width_ratio = 0;
 var resize_height_ratio = 0;
 $(function() {
-    // http://stackoverflow.com/questions/2303690/resizing-an-image-in-an-html5-canvas
-    
+    $('#resample_filter').on('change', (event) => {
+        let $target = $(event.delegateTarget);
+        let val = $target.val();
+        if (val === 'Gaussian') {
+            $('#resize_gaussian_options').show();
+        } else {
+            $('#resize_gaussian_options').hide();
+        }
+    });
     $('#dialog_resize').Dialog({
         onInit: function() {
             $('#resize_width').keyup(function () {
@@ -2402,6 +2413,8 @@ $(function() {
         },
         onClose: function() {
             $('#resample_filter').val('Catrom');
+            $('#resize_gaussian_options').hide();
+            $('#gaussian_sigma').val('0.5');
             $('#resize_prop').prop('checked', true);
         },
         onOk: function() {
@@ -2423,6 +2436,8 @@ $(function() {
             $('#resize_width').val($('#src').get(0).width);
             $('#resize_height').val($('#src').get(0).height);
             $('#resample_filter').val('Catrom');
+            $('#resize_gaussian_options').hide();
+            $('#gaussian_sigma').val('0.5');
             $('#resize_prop').prop('checked', true);
             $('#dst').attr('src', $('#src').attr('src'));
         }
@@ -2441,24 +2456,28 @@ $(function() {
                 <fieldset class="white">
                     <div style="margin-top:3px;"><label for="resize_width" style="display:inline-block;width:70px;">Width: </label><input id="resize_width" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
                     <div style="margin-top:6px;"><label for="resize_height" style="display:inline-block;width:70px;">Height: </label><input id="resize_height" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
+                    <div style="margin-top:10px;"><input type="checkbox" id="resize_prop" checked><label for="resize_prop" style="display:inline-block;"> Constrain Proportions</label></div>
                     <div style="margin-top:10px;"><label for="resample_filter" style="display:inline-block;width:70px;">Filter: </label><select id="resample_filter" style="text-align:left;">
                         <option value="Blackman">Blackman</option>
                         <option value="Box">Box</option>
-                        <option value="Catrom" selected>Catrom (precise)</option>
+                        <option value="Catrom" selected>Catrom</option>
                         <option value="Cubic">Cubic</option>
                         <option value="Gaussian">Gaussian</option>
                         <option value="Hamming">Hamming</option>
                         <option value="Hanning">Hanning</option>
                         <option value="Hermite">Hermite</option>
+                        <option value="Lagrange">Lagrange</option>
                         <option value="Lanczos">Lanczos</option>
                         <option value="Mitchell">Mitchell</option>
-                        <option value="Point">Nearest Neighbor (rough)</option>
+                        <option value="Point">Point</option>
                         <option value="">No Filter (default)</option>
                         <option value="Quadratic">Quadratic</option>
                         <option value="Sinc">Sinc</option>
                         <option value="Triangle">Triangle</option>
                     </select></div>
-                    <div style="margin-top:10px;"><input type="checkbox" id="resize_prop" checked><label for="resize_prop" style="display:inline-block;"> Constrain Proportions</label></div>
+                    <div id="resize_gaussian_options" style="display:none;">
+                        <div style="margin-top:3px;"><label for="gaussian_sigma" style="display:inline-block;width:70px;">Sigma: </label><input id="gaussian_sigma" type="text" value="0.5" maxlength="4" size="4" style="text-align:right;"></div>
+                    </div>
                 </fieldset>
             </div>
             <div class="buttons">
