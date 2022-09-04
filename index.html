@@ -34,6 +34,42 @@
 <script src="scripts/nub.js"></script>
 <script src="d3/d3.min.js"></script>
 <script src="scripts/curves.js"></script>
+<script type='module'>
+    //import the library magickApi.js to talk to magick.wasm
+    import * as Magick from './scripts/magickApi.js';
+
+    // Adding ImageMagick resize function
+    window.IMResize = async ($src, width, height, $dst, filter = '') => {
+        let name = 'src.png';
+        let dims = width+'x'+height+'!';
+
+        // Normalize input
+        let img = $src.get(0);
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        let data = urlToB64(canvas.toDataURL('image/png'));
+        let blob = b64toBlob(data.Base64, data.Mime);
+
+        let DoMagickCall = async () => {
+
+            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
+        
+            const files = [{ 'name': name, 'content': sourceBytes }];
+            let command = ['convert', name, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
+            if (filter !== '') command = ['convert', name, '-filter', filter, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
+            let processedFiles = await Magick.Call(files, command);
+        
+            let firstOutputImage = processedFiles[0];
+            console.log(firstOutputImage);
+            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
+            console.log('Resized image to ' + dims + ' using filter ' + (filter===''?'None':filter));
+        };
+        await DoMagickCall();
+    };
+</script>
 <script>
 Error.stackTraceLimit=Infinity;
 
@@ -1061,10 +1097,14 @@ function makeSave() {
     }
 }
 
-function makeOk(caption) {
+function makeOk(caption, cb = undefined) {
     State.save(caption);
+    $('#src').on('load', () => {
+        if (typeof cb === 'function') cb();
+        makeCancel();
+        $('#src').off('load');
+    });
     $('#src').attr('src', $('#dst').attr('src'));
-    makeCancel();
 }
 
 $(() => {
@@ -2283,16 +2323,8 @@ $(function() {
     
 <script>
 function makeResize() {
-    var img = $('#src').get(0);
-    if (img.width == 0 || img.height == 0) return null;
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var imageData = ctx.getImageData(0,0,img.width, img.height);
-    var w = parseInt($('#resize_width').val());
-    var h = parseInt($('#resize_height').val());
+    let w = parseInt($('#resize_width').val());
+    let h = parseInt($('#resize_height').val());
     if (isNaN(w)) {
         w = 1;
         $('#resize_width').val(w);
@@ -2313,25 +2345,7 @@ function makeResize() {
         $('#resize_height').val(h);
         $('#resize_height').get(0).select();
     }
-    var algo = $('#resize_algo').val();
-    var imageData2 = null;
-    if (algo == 'hermite') {
-        imageData2 = hermite(imageData, w, h);
-    } else if (algo == 'bicubic') {
-        imageData2 = bicubic(imageData, w, h);
-    } else if (algo == 'bilinear') {
-        imageData2 = bilinear(imageData, w, h);
-    } else if (algo == 'nearest') {
-        imageData2 = nearestNeighbor(imageData, w, h);
-    } else if (algo == 'sinc') {
-        imageData2 = lanczos(imageData, w, h, 3);
-    }
-    var canvas2 = document.createElement("canvas");
-    canvas2.width = imageData2.width;
-    canvas2.height = imageData2.height;
-    var ctx2 = canvas2.getContext("2d");
-    ctx2.putImageData(imageData2, 0, 0);
-    $('#dst').attr('src', canvas2.toDataURL('image/png'));
+    IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val());
 }
 
 var resize_width_ratio = 0;
@@ -2387,13 +2401,15 @@ $(function() {
             $('#src').hide();
         },
         onClose: function() {
-            $('#resize_algo').val('bicubic');
+            $('#resample_filter').val('Catrom');
             $('#resize_prop').prop('checked', true);
         },
         onOk: function() {
             makeResize();
-            $('#src').show();
-            makeOk("Resize");
+            
+            makeOk("Resize", () => {
+                $('#src').show();
+            });
             updateStatusBarDimensions();
         },
         onCancel: function() {
@@ -2406,7 +2422,7 @@ $(function() {
         onReset: function () {
             $('#resize_width').val($('#src').get(0).width);
             $('#resize_height').val($('#src').get(0).height);
-            $('#resize_algo').val('bicubic');
+            $('#resample_filter').val('Catrom');
             $('#resize_prop').prop('checked', true);
             $('#dst').attr('src', $('#src').attr('src'));
         }
@@ -2425,12 +2441,22 @@ $(function() {
                 <fieldset class="white">
                     <div style="margin-top:3px;"><label for="resize_width" style="display:inline-block;width:70px;">Width: </label><input id="resize_width" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
                     <div style="margin-top:6px;"><label for="resize_height" style="display:inline-block;width:70px;">Height: </label><input id="resize_height" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
-                    <div style="margin-top:10px;"><label for="resize_algo" style="display:inline-block;width:70px;">Algorithm: </label><select id="resize_algo" style="text-align:left;">
-                    <option value="nearest">Nearest Neighbor (rough)</option>
-                    <option value="bicubic" selected>Bicubic (precise)</option>
-                    <option value="bilinear">Bilinear (medium quality)</option>
-                    <!--option value="sinc">Sinc (Lanczos3)</option>
-                    <option value="hermite">Hermite</option-->
+                    <div style="margin-top:10px;"><label for="resample_filter" style="display:inline-block;width:70px;">Filter: </label><select id="resample_filter" style="text-align:left;">
+                        <option value="Blackman">Blackman</option>
+                        <option value="Box">Box</option>
+                        <option value="Catrom" selected>Catrom (precise)</option>
+                        <option value="Cubic">Cubic</option>
+                        <option value="Gaussian">Gaussian</option>
+                        <option value="Hamming">Hamming</option>
+                        <option value="Hanning">Hanning</option>
+                        <option value="Hermite">Hermite</option>
+                        <option value="Lanczos">Lanczos</option>
+                        <option value="Mitchell">Mitchell</option>
+                        <option value="Point">Nearest Neighbor (rough)</option>
+                        <option value="">No Filter (default)</option>
+                        <option value="Quadratic">Quadratic</option>
+                        <option value="Sinc">Sinc</option>
+                        <option value="Triangle">Triangle</option>
                     </select></div>
                     <div style="margin-top:10px;"><input type="checkbox" id="resize_prop" checked><label for="resize_prop" style="display:inline-block;"> Constrain Proportions</label></div>
                 </fieldset>
