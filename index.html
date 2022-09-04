@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="styles/main.css">
 <link rel="stylesheet" href="styles/menu.css">
 <link rel="stylesheet" href="styles/bars.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script src="scripts/grafi-despeckle.js"></script>
 <script src="scripts/grafi.js"></script>
 <script src="scripts/filters.js"></script>
@@ -226,6 +226,12 @@ let coordToImage = (coord) => {
 
     let r = parseFloat($('#zoom').val());
     return Math.round(coord / r);
+};
+
+let imageToCoord = (coord) => {
+
+let r = parseFloat($('#zoom').val());
+return Math.round(coord * r);
 };
 
 let removeTrailingZeros = (str) => {
@@ -1006,6 +1012,7 @@ function makeOpen(src, name, type) {
         State.save("Open");
         $('#src').removeAttr('src');
         $('#src').on('load', function() {
+            console.log('initial on load');
             var dep = 'RGB';
             var info = analyseColors();
             if (info.grayscale) dep = 'Grayscale';
