@@ -199,6 +199,13 @@
                                         makeStretch();
                                     }
                                 }, {
+                                    id: 'miautogamma',
+                                    Caption: 'Auto Gamma',
+                                    Disabled: true,
+                                    onClick: function () {
+                                        makeAutoGamma();
+                                    }
+                                }, {
                                     id: 'mibrightnesscontrast',
                                     Disabled: true,
                                     Caption: 'Brightness/Contrast...',

@@ -60,15 +60,134 @@
             const files = [{ 'name': name, 'content': sourceBytes }];
             let command = ['convert', name, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
             if (filter !== '') {
-                if (filter === 'Gaussian' && typeof extra === 'number') command = ['convert', name, '-define', 'filter:sigma='+extra.toString(), '-filter', filter, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
+                if (filter === 'Gaussian' && typeof extra === 'number') command = ['convert', name, '-define', 'filter:sigma='+extra.toString(), '-filter', filter, '-resize', dims, /*'-colorspace', 'sRGB',*/ 'dst.png'];
                 else command = ['convert', name, '-filter', filter, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
             }
             let processedFiles = await Magick.Call(files, command);
         
             let firstOutputImage = processedFiles[0];
-            console.log(firstOutputImage);
             $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
             console.log('Resized image to ' + dims + ' using filter ' + (filter===''?'None':filter));
+        };
+        await DoMagickCall();
+    };
+
+    // Adding ImageMagick auto-level function
+    window.IMAutoLevel = async ($src, $dst) => {
+        let name = 'src.png';
+
+        // Normalize input
+        let img = $src.get(0);
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        let data = urlToB64(canvas.toDataURL('image/png'));
+        let blob = b64toBlob(data.Base64, data.Mime);
+
+        let DoMagickCall = async () => {
+
+            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
+        
+            const files = [{ 'name': name, 'content': sourceBytes }];
+            let command = ['convert', name, '-channel', 'rgb', '-auto-level', /*'-colorspace', 'sRGB',*/ 'dst.png'];
+            let processedFiles = await Magick.Call(files, command);
+        
+            let firstOutputImage = processedFiles[0];
+            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
+        };
+        await DoMagickCall();
+    };
+
+    // Adding ImageMagick auto-gamma function
+    window.IMAutoGamma = async ($src, $dst) => {
+        let name = 'src.png';
+
+        // Normalize input
+        let img = $src.get(0);
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        let data = urlToB64(canvas.toDataURL('image/png'));
+        let blob = b64toBlob(data.Base64, data.Mime);
+
+        let DoMagickCall = async () => {
+
+            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
+        
+            const files = [{ 'name': name, 'content': sourceBytes }];
+            let command = ['convert', name, '-channel', 'rgb', '-auto-gamma', /*'-colorspace', 'sRGB',*/ 'dst.png'];
+            let processedFiles = await Magick.Call(files, command);
+        
+            let firstOutputImage = processedFiles[0];
+            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
+        };
+        await DoMagickCall();
+    };
+
+    // Adding ImageMagick auto-contrast function
+    window.IMAutoContrast = async ($src, $dst) => {
+        let name = 'src.png';
+
+        // Normalize input
+        let img = $src.get(0);
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        let data = urlToB64(canvas.toDataURL('image/png'));
+        let blob = b64toBlob(data.Base64, data.Mime);
+
+        let DoMagickCall = async () => {
+
+            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
+        
+            const files = [{ 'name': name, 'content': sourceBytes }];
+            let command = ['convert', name, '-contrast', /*'-colorspace', 'sRGB',*/ 'dst.png'];
+            let processedFiles = await Magick.Call(files, command);
+        
+            let firstOutputImage = processedFiles[0];
+            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
+        };
+        await DoMagickCall();
+    };
+
+    // Adding ImageMagick generic function
+    window.IMConvert = async (...args) => {
+        let name = 'src.png';
+        let $src = $('#src');
+        let $dst = $src;
+        
+        State.save("IM Convert");
+
+        // Normalize input
+        let img = $src.get(0);
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        let data = urlToB64(canvas.toDataURL('image/png'));
+        let blob = b64toBlob(data.Base64, data.Mime);
+
+        let DoMagickCall = async () => {
+
+            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
+        
+            const files = [{ 'name': name, 'content': sourceBytes }];
+            let command = ['convert', name];
+            for (let i = 0; i < args.length; i++) command.push(''+args[i]);
+            //command.push('-colorspace');
+            //command.push('sRGB');
+            command.push('dst.png');
+            let processedFiles = await Magick.Call(files, command);
+        
+            let firstOutputImage = processedFiles[0];
+            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
         };
         await DoMagickCall();
     };
@@ -334,7 +453,7 @@ function analyseColors() {
             info.grayscale = false;
         }
     }
-    console.log(info);
+    //console.log(info);
     return info;
 }
 
@@ -535,23 +654,13 @@ function makeLaplace() {
 }
 
 function makeStretch() {
-    var img = $('#src').get(0);
-    if (img.width == 0 || img.height == 0) return null;
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var imageData = ctx.getImageData(0,0,img.width, img.height);
-    if (Context.Depth == 'RGB') {
-        var levels = levels_config_stretch_channels(imageData);
-        ctx.putImageData(levels_multi_channels(imageData, levels), 0, 0);
-    } else if (Context.Depth == 'Grayscale') {
-        var levels = levels_config_stretch_channels(imageData, [0]);
-        ctx.putImageData(levels_multi_channels(imageData, levels), 0, 0);
-    }
     State.save("Auto Levels");
-    $('#src').attr('src', canvas.toDataURL('image/png'));
+    IMAutoLevel($('#src'), $('#src'));
+}
+
+function makeAutoGamma() {
+    State.save("Auto Gamma");
+    IMAutoGamma($('#src'), $('#src'));
 }
 
 function makeEqualize() {
@@ -569,17 +678,8 @@ function makeEqualize() {
 }
 
 function makeAutoContrast() {
-    var img = $('#src').get(0);
-    if (img.width == 0 || img.height == 0) return null;
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var imageData = ctx.getImageData(0,0,img.width, img.height);
-    ctx.putImageData(autoContrast(imageData), 0, 0);
     State.save("Auto Contrast");
-    $('#src').attr('src', canvas.toDataURL('image/png'));
+    IMAutoContrast($('#src'), $('#src'));
 }
 
 function makeNormalize() {
@@ -821,7 +921,7 @@ function makeCancel() {
 function updateMenuMode(closing) {
     if (typeof closing === 'undefined') closing = false;
     $('#menumode .subitem').addClass('disabled');
-    console.log($('#menumode .subitem'));
+    //console.log($('#menumode .subitem'));
     $('#menumode .subitem').removeClass('checked');
     if (closing === false) {
       if (Context.Depth === 'RGB') {
@@ -880,6 +980,7 @@ function enableMenusOnOpen() {
     $('#miequalize').removeClass('disabled');
     $('#minormalize').removeClass('disabled');
     $('#mistretch').removeClass('disabled');
+    $('#miautogamma').removeClass('disabled');
     $('#mihistogram').removeClass('disabled');
     $('#mipixelate').removeClass('disabled');
     $('#mimedian').removeClass('disabled');
@@ -949,6 +1050,7 @@ function disableMenusOnClose() {
     $('#miequalize').addClass('disabled');
     $('#minormalize').addClass('disabled');
     $('#mistretch').addClass('disabled');
+    $('#miautogamma').addClass('disabled');
     $('#mihistogram').addClass('disabled');
     $('#mipixelate').addClass('disabled');
     $('#mimedian').addClass('disabled');
@@ -1010,9 +1112,9 @@ function makeOpen(src, name, type) {
     if (src.length > 0) {
         resetZoom();
         State.save("Open");
+        $('#src').off('load');
         $('#src').removeAttr('src');
-        $('#src').on('load', function() {
-            console.log('initial on load');
+        $('#src').on('load', () => {
             var dep = 'RGB';
             var info = analyseColors();
             if (info.grayscale) dep = 'Grayscale';
@@ -1029,6 +1131,8 @@ function makeOpen(src, name, type) {
             $('#statusbar .zoomtools').show();
             updateStatusBarDimensions();
             $('#statusbar .dimensions').show();
+            $('#src').off('load');
+            $('#src').on('load', updateStatusBarDimensions);
         });
         $('#src').attr('src', src);
     }
