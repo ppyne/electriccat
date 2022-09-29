@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="styles/menu.css">
 <link rel="stylesheet" href="styles/bars.css">
 <script src="scripts/jquery-3.1.0.min.js"></script>
+<script src="imagick.js"></script>
+<script src="im.js"></script>
 <script src="scripts/grafi-despeckle.js"></script>
 <script src="scripts/grafi.js"></script>
 <script src="scripts/filters.js"></script>
@@ -34,164 +36,6 @@
 <script src="scripts/nub.js"></script>
 <script src="d3/d3.min.js"></script>
 <script src="scripts/curves.js"></script>
-<script type='module'>
-    //import the library magickApi.js to talk to magick.wasm
-    import * as Magick from './scripts/magickApi.js';
-
-    // Adding ImageMagick resize function
-    window.IMResize = async ($src, width, height, $dst, filter = '', extra = undefined) => {
-        let name = 'src.png';
-        let dims = width+'x'+height+'!';
-
-        // Normalize input
-        let img = $src.get(0);
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        let data = urlToB64(canvas.toDataURL('image/png'));
-        let blob = b64toBlob(data.Base64, data.Mime);
-
-        let DoMagickCall = async () => {
-
-            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
-        
-            const files = [{ 'name': name, 'content': sourceBytes }];
-            let command = ['convert', name, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
-            if (filter !== '') {
-                if (filter === 'Gaussian' && typeof extra === 'number') command = ['convert', name, '-define', 'filter:sigma='+extra.toString(), '-filter', filter, '-resize', dims, /*'-colorspace', 'sRGB',*/ 'dst.png'];
-                else command = ['convert', name, '-filter', filter, '-resize', dims, '-colorspace', 'sRGB', 'dst.png'];
-            }
-            let processedFiles = await Magick.Call(files, command);
-        
-            let firstOutputImage = processedFiles[0];
-            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
-            console.log('Resized image to ' + dims + ' using filter ' + (filter===''?'None':filter));
-        };
-        await DoMagickCall();
-    };
-
-    // Adding ImageMagick auto-level function
-    window.IMAutoLevel = async ($src, $dst) => {
-        let name = 'src.png';
-
-        // Normalize input
-        let img = $src.get(0);
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        let data = urlToB64(canvas.toDataURL('image/png'));
-        let blob = b64toBlob(data.Base64, data.Mime);
-
-        let DoMagickCall = async () => {
-
-            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
-        
-            const files = [{ 'name': name, 'content': sourceBytes }];
-            let command = ['convert', name, '-channel', 'rgb', '-auto-level', /*'-colorspace', 'sRGB',*/ 'dst.png'];
-            let processedFiles = await Magick.Call(files, command);
-        
-            let firstOutputImage = processedFiles[0];
-            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
-        };
-        await DoMagickCall();
-    };
-
-    // Adding ImageMagick auto-gamma function
-    window.IMAutoGamma = async ($src, $dst) => {
-        let name = 'src.png';
-
-        // Normalize input
-        let img = $src.get(0);
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        let data = urlToB64(canvas.toDataURL('image/png'));
-        let blob = b64toBlob(data.Base64, data.Mime);
-
-        let DoMagickCall = async () => {
-
-            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
-        
-            const files = [{ 'name': name, 'content': sourceBytes }];
-            let command = ['convert', name, '-channel', 'rgb', '-auto-gamma', /*'-colorspace', 'sRGB',*/ 'dst.png'];
-            let processedFiles = await Magick.Call(files, command);
-        
-            let firstOutputImage = processedFiles[0];
-            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
-        };
-        await DoMagickCall();
-    };
-
-    // Adding ImageMagick auto-contrast function
-    window.IMAutoContrast = async ($src, $dst) => {
-        let name = 'src.png';
-
-        // Normalize input
-        let img = $src.get(0);
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        let data = urlToB64(canvas.toDataURL('image/png'));
-        let blob = b64toBlob(data.Base64, data.Mime);
-
-        let DoMagickCall = async () => {
-
-            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
-        
-            const files = [{ 'name': name, 'content': sourceBytes }];
-            let command = ['convert', name, '-contrast', /*'-colorspace', 'sRGB',*/ 'dst.png'];
-            let processedFiles = await Magick.Call(files, command);
-        
-            let firstOutputImage = processedFiles[0];
-            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
-        };
-        await DoMagickCall();
-    };
-
-    // Adding ImageMagick generic function
-    window.IMConvert = async (...args) => {
-        let name = 'src.png';
-        let $src = $('#src');
-        let $dst = $src;
-        
-        State.save("IM Convert");
-
-        // Normalize input
-        let img = $src.get(0);
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        let data = urlToB64(canvas.toDataURL('image/png'));
-        let blob = b64toBlob(data.Base64, data.Mime);
-
-        let DoMagickCall = async () => {
-
-            let sourceBytes = new Uint8Array(await blob.arrayBuffer());
-        
-            const files = [{ 'name': name, 'content': sourceBytes }];
-            let command = ['convert', name];
-            for (let i = 0; i < args.length; i++) command.push(''+args[i]);
-            //command.push('-colorspace');
-            //command.push('sRGB');
-            command.push('dst.png');
-            let processedFiles = await Magick.Call(files, command);
-        
-            let firstOutputImage = processedFiles[0];
-            $dst.attr('src', URL.createObjectURL(firstOutputImage['blob']));
-        };
-        await DoMagickCall();
-    };
-</script>
 <script>
 
 let working = async (cb) => {
@@ -679,7 +523,7 @@ function makeEqualize() {
 
 function makeAutoContrast() {
     State.save("Auto Contrast");
-    IMAutoContrast($('#src'), $('#src'));
+    IMContrast($('#src'), $('#src'));
 }
 
 function makeNormalize() {
@@ -2466,8 +2310,7 @@ let makeResize = async () => {
         $('#resize_height').get(0).select();
     }
     $('body').addClass('working');
-    if ($('#resample_filter').val() === 'Gaussian') await IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val(), parseFloat($('#gaussian_sigma').val()));
-    else await IMResize($('#src'), w, h, $('#dst'), $('#resample_filter').val());
+    IMCmdResize($('#src'), w, h, $('#resample_filter').val(), $('#dst'));
     $('body').removeClass('working');
 }
 
@@ -2478,7 +2321,7 @@ $(function() {
         let $target = $(event.delegateTarget);
         let val = $target.val();
         if (val === 'Gaussian') {
-            $('#resize_gaussian_options').show();
+            //$('#resize_gaussian_options').show();
         } else {
             $('#resize_gaussian_options').hide();
         }
@@ -2576,6 +2419,7 @@ $(function() {
                     <div style="margin-top:6px;"><label for="resize_height" style="display:inline-block;width:70px;">Height: </label><input id="resize_height" type="text" value="0" maxlength="4" size="4" style="text-align:right;"> px</div>
                     <div style="margin-top:10px;"><input type="checkbox" id="resize_prop" checked><label for="resize_prop" style="display:inline-block;"> Constrain Proportions</label></div>
                     <div style="margin-top:10px;"><label for="resample_filter" style="display:inline-block;width:70px;">Filter: </label><select id="resample_filter" style="text-align:left;">
+                        <option value="" selected>Automatic (default)</option>
                         <option value="Bartlett">Bartlett</option>
                         <option value="Blackman">Blackman</option>
                         <option value="Bohman">Bohman</option>
@@ -2583,28 +2427,29 @@ $(function() {
                         <option value="Catrom">Catrom</option>
                         <option value="Cosine">Cosine</option>
                         <option value="Cubic">Cubic</option>
-                        <option value="" selected>Automatic (default)</option>
                         <option value="Gaussian">Gaussian</option>
-                        <option value="Hann">Hann</option>
                         <option value="Hamming">Hamming</option>
+                        <option value="Hanning">Hanning</option>
                         <option value="Hermite">Hermite</option>
                         <option value="Jinc">Jinc</option>
                         <option value="Kaiser">Kaiser</option>
                         <option value="Lagrange">Lagrange</option>
-                        <option value="Lanczos">Lanczos (for shrinking)</option>
-                        <option value="LanczosSharp">Lanczos Sharp</option>
-                        <option value="Lanczos2">Lanczos 2</option>
-                        <option value="Lanczos2Sharp">Lanczos 2 Sharp</option>
-                        <option value="Mitchell">Mitchell (for enlargement)</option>
+                        <option value="Lanczos">Lanczos</option>
+                        <option value="Lanczos2">Lanczos2</option>
+                        <option value="Lanczos2Sharp">Lanczos2Sharp</option>
+                        <option value="LanczosRadius">LanczosRadius</option>
+                        <option value="LanczosSharp">LanczosSharp</option>
+                        <option value="Mitchell">Mitchell</option>
                         <option value="Parzen">Parzen</option>
                         <option value="Point">Point</option>
                         <option value="Quadratic">Quadratic</option>
                         <option value="Robidoux">Robidoux</option>
-                        <option value="RobidouxSharp">Robidoux Sharp</option>
+                        <option value="RobidouxSharp">RobidouxSharp</option>
                         <option value="Sinc">Sinc</option>
+                        <option value="SincFast">SincFast</option>
                         <option value="Spline">Spline</option>
                         <option value="Triangle">Triangle</option>
-                        <option value="Welch">Welch</option>
+                        <option value="Welsh">Welsh</option>
                     </select></div>
                     <div id="resize_gaussian_options" style="display:none;">
                         <div style="margin-top:3px;"><label for="gaussian_sigma" style="display:inline-block;width:70px;">Sigma: </label><input id="gaussian_sigma" type="text" value="0.5" maxlength="4" size="4" style="text-align:right;"></div>
