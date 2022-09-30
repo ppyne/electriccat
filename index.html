@@ -2107,7 +2107,7 @@ function colorquant_buildPalette() {
     } else {
         cols = $('#colorquant_colors_input').val();
         palsel = val;
-        if (val == 'ada' || val == 'exa') palsel = 'none'; 
+        if (val == 'ada' || val == 'ima' || val == 'exa') palsel = 'none'; 
     }
     var opts = {
         colors: parseInt(cols),
@@ -2118,6 +2118,7 @@ function colorquant_buildPalette() {
         palette: palettes[palsel],
         reIndex: false
     };
+    if (val === 'ima') opts.palette = IMQuantizeAndListUniqueColors($('#src'), cols);
     if (opts.dithKern === "") opts.dithKern = null;
     rgbquant = new RgbQuant(opts);
     rgbquant.sample($('#src').get(0));
@@ -2245,6 +2246,7 @@ $(function() {
                 <fieldset class="white">
                     <div><div style="margin-top:3px;text-align:right;"><label for="colorquant_palette" style="display:inline-block;float:left;">Palette</label><select id="colorquant_palette">
                     <option selected value="ada">Adaptive</option>
+                    <option value="ima">Image magick</option>
                     <option value="exa">Exact</option>
                     <option value="uni">Uniform</option>
                     <option value="mac">System (Mac OS)</option>

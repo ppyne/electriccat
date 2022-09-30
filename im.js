@@ -178,6 +178,15 @@ let IMListUniqueColors = ($src) => {
     return json;
 };
 
+let IMQuantizeAndListUniqueColors = ($src, numberColors) => {
+    const [ width, height ] = _IMSetSource($src);
+    if (width === false) return false;
+    _IMQuantizeAndListUniqueColors(width, height, numberColors);
+    let json = _IMLoadJson();
+    _IMClearFS();
+    return json;
+}
+
 let IMAutoLevel = ($src, $dst, channels = IMEnumChannels.RGB) => {
     const [ width, height ] = _IMSetSource($src);
     if (width === false) return;
@@ -234,6 +243,7 @@ let _onIMReady = () => {
     _IMQuantize = Module.cwrap('_IMQuantize', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number']);
     _IMPosterize = Module.cwrap('_IMPosterize', null, ['number', 'number', 'number', 'number']);
     _IMListUniqueColors = Module.cwrap('_IMListUniqueColors', null, ['number', 'number']);
+    _IMQuantizeAndListUniqueColors = Module.cwrap('_IMQuantizeAndListUniqueColors', null, ['number', 'number', 'number']);
     _IMAutoLevel = Module.cwrap('_IMAutoLevel', null, ['number', 'number', 'number']);
     _IMAutoGamma = Module.cwrap('_IMAutoGamma', null, ['number', 'number', 'number']);
     _IMContrast = Module.cwrap('_IMContrast', null, ['number', 'number', 'number']);
