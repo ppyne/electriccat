@@ -791,3 +791,9 @@ body.ElectricCat.working * {
     height: 48px;
     margin: 0 auto 6px;
 }
+
+.ElectricCat .radios label {
+    display: inline-block;
+    vertical-align: 1px;
+    margin-left: 3px;
+}

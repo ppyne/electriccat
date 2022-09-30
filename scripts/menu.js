@@ -220,6 +220,13 @@
                                         makeAutoContrast();
                                     }
                                 }, {
+                                    id: 'misigmoidalcontrast',
+                                    Disabled: true,
+                                    Caption: 'Sigmoidal Contrast...',
+                                    onClick: function () {
+                                        $('#dialog_sigcon').Dialog('open');
+                                    }
+                                }, {
                                     id: 'micurves',
                                     Disabled: true,
                                     Caption: 'Curves...',

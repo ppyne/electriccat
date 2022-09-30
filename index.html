@@ -808,6 +808,7 @@ function enableMenusOnOpen() {
     $('#mirotate90CCW').removeClass('disabled');
     $('#mihuesaturation').removeClass('disabled');
     $('#mibrightnesscontrast').removeClass('disabled');
+    $('#misigmoidalcontrast').removeClass('disabled');
     $('#michannelmixer').removeClass('disabled');
     $('#miposterize').removeClass('disabled');
     $('#mithreshold').removeClass('disabled');
@@ -878,6 +879,7 @@ function disableMenusOnClose() {
     $('#mirotate90CCW').addClass('disabled');
     $('#mihuesaturation').addClass('disabled');
     $('#mibrightnesscontrast').addClass('disabled');
+    $('#misigmoidalcontrast').addClass('disabled');
     $('#michannelmixer').addClass('disabled');
     $('#miposterize').addClass('disabled');
     $('#mithreshold').addClass('disabled');
@@ -1753,7 +1755,61 @@ $(function() {
         </div>
         </div>
     </div>
-    
+
+
+    <script>
+        
+        $(function() {
+            $('#dialog_sigcon').Dialog({
+                onInit: function() {
+                    $('#sigcon_con_bar').barInput({Min:0,Max:50,Default:3,Label:'Contrast',HalfScale:true});
+                    $('#sigcon_mid_bar').barInput({Min:0,Max:100,Default:50,Label:'Mid-point',HalfScale:true});
+                },
+                onClose: function() {
+                    $('#sigcon_con_bar').barInput('reset');
+                    $('#sigcon_mid_bar').barInput('reset');
+                },
+                onOk: function() {
+                    IMSigmoidalContrast($('#src'), $('input[name=sigmoidalContrastRadio]:checked').val()==1?0:1, $('#sigcon_con_bar input').val(), $('#sigcon_mid_bar input').val(), $('#dst'));
+                    makeOk("Sigmoidal Contrast");
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMSigmoidalContrast($('#src'), $('input[name=sigmoidalContrastRadio]:checked').val()==1?0:1, $('#sigcon_con_bar input').val(), $('#sigcon_mid_bar input').val(), $('#dst'));
+                },
+                onReset: function () {
+                    $('#sigcon_con_bar').barInput('reset');
+                    $('#sigcon_mid_bar').barInput('reset');
+                }
+            });
+        });
+        </script>
+        
+            
+            <div class="dialog" id="dialog_sigcon">
+                <div class="bar"><div class="caption">Sigmoidal Contrast</div></div>
+                <div class="border">
+                <div class="zone">
+                    <div class="main">
+                        <fieldset class="white">
+                            <div class="radios"><input type="radio" id="sigmoidalContrastIncrease" name="sigmoidalContrastRadio" value="1" checked /><label for="sigmoidalContrastIncrease">Increase</label> <input type="radio" id="sigmoidalContrastDecrease" name="sigmoidalContrastRadio" value="0" /><label for="sigmoidalContrastDecrease">Decrease</label></div>
+                            <div id="sigcon_con_bar"></div>
+                            <div id="sigcon_mid_bar"></div>
+                        </fieldset>
+                    </div>
+                    <div class="buttons">
+                        <button class="btn_ok main" type="button">Ok</button>
+                        <button class="btn_cancel" type="button">Cancel</button>
+                        <button class="btn_reset" type="button">Reset</button>
+                        <button class="btn_apply" type="button">Preview</button>
+                        <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                    </div>
+                </div>
+                </div>
+            </div>
+
 <script>
 function chanmix_reset() {
     $('#chanmix_red_red_bar').barInput('reset');
