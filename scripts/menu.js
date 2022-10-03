@@ -547,6 +547,20 @@
                                                 $('#dialog_vignette').Dialog('open');
                                             }
                                         }, {
+                                            id: 'micharcoal',
+                                            Caption: 'Charcoal...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_charcoal').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'misketch',
+                                            Caption: 'Sketch...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_sketch').Dialog('open');
+                                            }
+                                        }, {
                                             id: 'miink',
                                             Caption: 'Ink...',
                                             Disabled: true,
@@ -559,6 +573,13 @@
                                             Disabled: true,
                                             onClick: function () {
                                                 $('#dialog_oil').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'mimorphology',
+                                            Caption: 'Morphology...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_morphology').Dialog('open');
                                             }
                                         }, {
                                             id: 'mierosion',

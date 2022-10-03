@@ -850,6 +850,8 @@ function enableMenusOnOpen() {
     $('#mitriangleblur').removeClass('disabled');
     $('#mivibrance').removeClass('disabled');
     $('#misepia').removeClass('disabled');
+    $('#micharcoal').removeClass('disabled');
+    $('#misketch').removeClass('disabled');
     $('#miink').removeClass('disabled');
     $('#miedgework').removeClass('disabled');
     $('#midenoise').removeClass('disabled');
@@ -857,6 +859,7 @@ function enableMenusOnOpen() {
     $('#mivignette').removeClass('disabled');
     $('#mitiltshift').removeClass('disabled');
     $('#mioil').removeClass('disabled');
+    $('#mimorphology').removeClass('disabled');
     $('#mimotionblur').removeClass('disabled');
     $('#mibilateral').removeClass('disabled');
     $('#mibilateral2').removeClass('disabled');
@@ -921,6 +924,8 @@ function disableMenusOnClose() {
     $('#mitriangleblur').addClass('disabled');
     $('#mivibrance').addClass('disabled');
     $('#misepia').addClass('disabled');
+    $('#micharcoal').addClass('disabled');
+    $('#misketch').addClass('disabled');
     $('#miink').addClass('disabled');
     $('#miedgework').addClass('disabled');
     $('#midenoise').addClass('disabled');
@@ -928,6 +933,7 @@ function disableMenusOnClose() {
     $('#mivignette').addClass('disabled');
     $('#mitiltshift').addClass('disabled');
     $('#mioil').addClass('disabled');
+    $('#mimorphology').addClass('disabled');
     $('#mimotionblur').addClass('disabled');
     $('#mibilateral').addClass('disabled');
     $('#mibilateral2').addClass('disabled');
@@ -4289,6 +4295,127 @@ $(function() {
         </div>
     </div>
 
+
+    <script>
+        
+        $(function() {
+            $('#dialog_charcoal').Dialog({
+                onInit: function() {
+                    $('#charcoal_radius').barInput({Float:true, Min:1, Max:50, Default:2, Label:'Radius'});
+                    $('#charcoal_sigma').barInput({Float:true, Min:0, Max:10, Default:0.5, Label:'Sigma'});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#charcoal_radius').barInput('reset');
+                    $('#charcoal_sigma').barInput('reset');
+                },
+                onOk: function() {
+                    IMCharcoal($('#src'), $('#charcoal_radius input').val(), $('#charcoal_sigma input').val(), $('#dst'));
+                    makeOk("Charcoal");
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMCharcoal($('#src'), $('#charcoal_radius input').val(), $('#charcoal_sigma input').val(), $('#dst'));
+                },
+                onReset: function () {
+                    $('#charcoal_radius').barInput('reset');
+                    $('#charcoal_sigma').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+        
+            });
+        });
+        </script>
+            <div class="dialog" id="dialog_charcoal">
+                <div class="bar"><div class="caption">Charcoal</div></div>
+                <div class="border">
+                <div class="zone">
+                    <div class="main">
+                        <fieldset class="white">
+                            <div id="charcoal_radius"></div>
+                            <div id="charcoal_sigma"></div>
+                        </fieldset>
+                    </div>
+                    <div class="buttons">
+                        <button class="btn_ok main" type="button">Ok</button>
+                        <button class="btn_cancel" type="button">Cancel</button>
+                        <button class="btn_reset" type="button">Reset</button>
+                        <button class="btn_apply" type="button">Preview</button>
+                        <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        
+
+
+            <script>
+        
+                $(function() {
+                    $('#dialog_sketch').Dialog({
+                        onInit: function() {
+                            $('#sketch_radius').barInput({Float:true, Min:1, Max:50, Default:4.4, Label:'Radius'});
+                            $('#sketch_sigma').barInput({Float:true, Min:0, Max:10, Default:5, Label:'Sigma'});
+                            $('#sketch_angle').barInput({Float:false, Min:-180, Max:180, Default:-45, Label:'Angle'});
+                        },
+                        onOpen: function() {
+                            $('#dst').attr('src', $('#src').attr('src'));
+                            $('#src').hide();
+                        },
+                        onClose: function() {
+                            $('#src').show();
+                            $('#sketch_radius').barInput('reset');
+                            $('#sketch_sigma').barInput('reset');
+                            $('#sketch_angle').barInput('reset');
+                        },
+                        onOk: function() {
+                            IMSketch($('#src'), $('#sketch_radius input').val(), $('#sketch_sigma input').val(), $('#sketch_angle input').val(), $('#dst'));
+                            makeOk("Sketch");
+                        },
+                        onCancel: function() {
+                            makeCancel();
+                        },
+                        onApply: function () {
+                            IMSketch($('#src'), $('#sketch_radius input').val(), $('#sketch_sigma input').val(), $('#sketch_angle input').val(), $('#dst'));
+                        },
+                        onReset: function () {
+                            $('#sketch_radius').barInput('reset');
+                            $('#sketch_sigma').barInput('reset');
+                            $('#sketch_angle').barInput('reset');
+                            $('#dst').attr('src', $('#src').attr('src'));
+                        }
+                
+                    });
+                });
+                </script>
+                    <div class="dialog" id="dialog_sketch">
+                        <div class="bar"><div class="caption">Sketch</div></div>
+                        <div class="border">
+                        <div class="zone">
+                            <div class="main">
+                                <fieldset class="white">
+                                    <div id="sketch_radius"></div>
+                                    <div id="sketch_sigma"></div>
+                                    <div id="sketch_angle"></div>
+                                </fieldset>
+                            </div>
+                            <div class="buttons">
+                                <button class="btn_ok main" type="button">Ok</button>
+                                <button class="btn_cancel" type="button">Cancel</button>
+                                <button class="btn_reset" type="button">Reset</button>
+                                <button class="btn_apply" type="button">Preview</button>
+                                <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
 <script>
 function makeInk() {
     try {
@@ -4783,6 +4910,127 @@ $(function() {
         </div>
         </div>
     </div>
+
+    <script>
+        
+        $(function() {
+            let onKernelParamsChange = () => {
+                let $morphologyKernel = $('#morphologyKernel');
+                let $morphologyKernelParams = $('#morphologyKernelParams');
+                let $kernelPreview = $('#kernelPreview');
+                $kernelPreview.attr('src', 'images/kern_' + $morphologyKernel.val() + '-' + $morphologyKernelParams.val() + '.gif');
+            }
+            let onKernelChange = () => {
+                let $morphologyKernel = $('#morphologyKernel');
+                let $morphologyKernelParams = $('#morphologyKernelParams');
+                let k = $morphologyKernel.val();
+                $morphologyKernelParams.empty();
+                for (const params of IMEnumKernels[k]) {
+                    let $opt = $('<option />');
+                    $opt.val(params);
+                    $opt.text(params);
+                    $morphologyKernelParams.append($opt);
+                }
+                onKernelParamsChange();
+            }
+            $('#morphologyKernel').on('change', onKernelChange);
+            $('#morphologyKernelParams').on('change', onKernelParamsChange);
+            $('#dialog_morphology').Dialog({
+                onInit: function() {
+                    onKernelChange();
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                },
+                onOk: function() {
+                    IMMorphology($('#src'), $('#morphologyMethod').val(), $('#morphologyKernel').val() + ':' +  $('#morphologyKernelParams').val(), $('#dst'));
+                    makeOk("Morphology");
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMMorphology($('#src'), $('#morphologyMethod').val(), $('#morphologyKernel').val() + ':' +  $('#morphologyKernelParams').val(), $('#dst'));
+                },
+                onReset: function () {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+        
+            });
+        });
+        </script>
+            <div class="dialog" id="dialog_morphology">
+                <div class="bar"><div class="caption">Morphology</div></div>
+                <div class="border">
+                <div class="zone">
+                    <div class="main">
+                        <fieldset class="white">
+                            <div id="morphology_method">
+                                <label style="display:inline-block; width: 90px;" for="morphologyMethod">Method</label>
+                                <select id="morphologyMethod">
+                                    <option value="Correlate">Correlate</option>
+                                    <option value="Convolve">Convolve</option>
+                                    <option value="Dilate" selected>Dilate</option>
+                                    <option value="Erode">Erode</option>
+                                    <option value="Close">Close</option>
+                                    <option value="Open">Open</option>
+                                    <option value="DilateIntensity">Dilate Intensity</option>
+                                    <option value="ErodeIntensity">Erode Intensity</option>
+                                    <option value="CloseIntensity">Close Intensity</option>
+                                    <option value="OpenIntensity">Open Intensity</option>
+                                    <option value="DilateI">Dilate I</option>
+                                    <option value="ErodeI">Erode I</option>
+                                    <option value="CloseI">Close I</option>
+                                    <option value="OpenI">Open I</option>
+                                    <option value="Smooth">Smooth</option>
+                                    <option value="EdgeOut">EdgeOut</option>
+                                    <option value="EdgeIn">EdgeIn</option>
+                                    <option value="Edge">Edge</option>
+                                    <option value="TopHat">TopHat</option>
+                                    <option value="BottomHat">BottomHat</option>
+                                    <option value="Hmt">Hmt</option>
+                                    <option value="HitNMiss">HitNMiss</option>
+                                    <option value="HitAndMiss">HitAndMiss</option>
+                                    <option value="Thinning">Thinning</option>
+                                    <option value="Thicken">Thicken</option>
+                                    <option value="Distance">Distance</option>
+                                </select>
+                            </div>
+                            <div id="morphology_kernel" style="margin-top:3px;">
+                                <label style="display:inline-block; width: 90px;" for="morphologyKernel">Kernel</label>
+                                <select id="morphologyKernel">
+                                    <option value="Square">Square</option>
+                                    <option value="Diamond">Diamond</option>
+                                    <option value="Octagon" selected>Octagon</option>
+                                    <option value="Disk">Disk</option>
+                                    <option value="Plus">Plus</option>
+                                    <option value="Cross">Cross</option>
+                                    <option value="Ring">Ring</option>
+                                    <option value="Rectangle">Rectangle</option>
+                                </select>
+                            </div>
+                            <div id="morphology_params" style="margin-top:3px;">
+                                <label style="display:inline-block; width: 90px;" for="morphologyKernelParams">Size</label>
+                                <select id="morphologyKernelParams"></select>
+                            </div>
+                            <div style="margin-top:10px;"><label>Kernel preview</label></div>
+                            <div style="padding-left: 90px;"><span style="border: 1px solid black; display: inline-block;"><img style="vertical-align: middle;" id="kernelPreview" /></span></div>
+                        </fieldset>
+                    </div>
+                    <div class="buttons">
+                        <button class="btn_ok main" type="button">Ok</button>
+                        <button class="btn_cancel" type="button">Cancel</button>
+                        <button class="btn_reset" type="button">Reset</button>
+                        <button class="btn_apply" type="button">Preview</button>
+                        <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                    </div>
+                </div>
+                </div>
+            </div>
 
 <script>
 function makeMotionBlur() {
