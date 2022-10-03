@@ -1768,7 +1768,7 @@ $(function() {
         $(function() {
             $('#dialog_sigcon').Dialog({
                 onInit: function() {
-                    $('#sigcon_con_bar').barInput({Min:0,Max:50,Default:3,Label:'Contrast',HalfScale:true});
+                    $('#sigcon_con_bar').barInput({Min:0,Max:50,Default:3,Label:'Contrast',HalfScale:false});
                     $('#sigcon_mid_bar').barInput({Min:0,Max:100,Default:50,Label:'Mid-point',HalfScale:true});
                 },
                 onClose: function() {
@@ -4362,7 +4362,7 @@ $(function() {
                         onInit: function() {
                             $('#sketch_radius').barInput({Float:true, Min:1, Max:50, Default:4.4, Label:'Radius'});
                             $('#sketch_sigma').barInput({Float:true, Min:0, Max:10, Default:5, Label:'Sigma'});
-                            $('#sketch_angle').barInput({Float:false, Min:-180, Max:180, Default:-45, Label:'Angle'});
+                            $('#sketch_angle').barInput({Float:false, Min:-180, Max:180, Default:-45, Label:'Angle',HalfScale:true});
                         },
                         onOpen: function() {
                             $('#dst').attr('src', $('#src').attr('src'));
