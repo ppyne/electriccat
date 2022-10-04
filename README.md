@@ -89,7 +89,7 @@ Available features:
 
 <img src="readme_images/Curve.png" width="900" height="600" alt=""/>
 
-### Adjust / Color Balance...
+### Adjust / Color Balance...
 
 <img src="readme_images/ColorBalance.png" width="900" height="600" alt=""/>
 
@@ -97,7 +97,7 @@ Available features:
 
 <img src="readme_images/ChannelMixer.png" width="900" height="600" alt=""/>
 
-### Adjust / Hue/Saturation...
+### Adjust / Hue/Saturation...
 
 <img src="readme_images/HueSaturation.png" width="900" height="600" alt=""/>
 
