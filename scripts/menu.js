@@ -234,6 +234,13 @@
                                          $('#dialog_curves').Dialog('open');
                                     }
                                 }, {
+                                    id: 'miexposure',
+                                    Disabled: true,
+                                    Caption: 'Exposure...',
+                                    onClick: function () {
+                                         $('#dialog_exposure').Dialog('open');
+                                    }
+                                }, {
                                     Separator: true
                                 }, {
                                     id: 'micolorbalance',

@@ -867,6 +867,7 @@ function enableMenusOnOpen() {
     $('#midialation').removeClass('disabled');
     $('#micurves').removeClass('disabled');
     $('#miphotofilter').removeClass('disabled');
+    $('#miexposure').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -941,6 +942,7 @@ function disableMenusOnClose() {
     $('#midialation').addClass('disabled');
     $('#micurves').addClass('disabled');
     $('#miphotofilter').addClass('disabled');
+    $('#miexposure').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -4089,6 +4091,65 @@ $(function() {
         </div>
     </div>
 
+<script>
+    $(function() {
+        $('#dialog_exposure').Dialog({
+            onInit: function() {
+                $('#exposure_stops').barInput({Min:-20, Max:20, Default:0, Float:true, HalfScale:true, Label:'Exposition'});
+                $('#exposure_offset').barInput({Min:-0.5, Max:0.5, Default:0, Float:true, HalfScale:true, Label:'Offset'});
+                $('#exposure_gamma').barInput({Min:0.1, Max:9.9, Default:1, Float:true, Label:'Gamma'});
+            },
+            onOpen: function() {
+                $('#dst').attr('src', $('#src').attr('src'));
+                $('#src').hide();
+            },
+            onClose: function() {
+                $('#src').show();
+                $('#exposure_stops').barInput('reset');
+                $('#exposure_offset').barInput('reset');
+                $('#exposure_gamma').barInput('reset');
+            },
+            onOk: function() {
+                IMExposure($('#src'), parseFloat($('#exposure_stops input').val()), parseFloat($('#exposure_offset input').val()), parseFloat($('#exposure_gamma input').val()), $('#dst'));
+                makeOk("Exposure");
+            },
+            onCancel: function() {
+                makeCancel();
+            },
+            onApply: function () {
+                IMExposure($('#src'), parseFloat($('#exposure_stops input').val()), parseFloat($('#exposure_offset input').val()), parseFloat($('#exposure_gamma input').val()), $('#dst'));
+            },
+            onReset: function () {
+                $('#exposure_stops').barInput('reset');
+                $('#exposure_offset').barInput('reset');
+                $('#exposure_gamma').barInput('reset');
+                $('#dst').attr('src', $('#src').attr('src'));
+            }
+    
+        });
+    });
+</script>
+    <div class="dialog" id="dialog_exposure">
+        <div class="bar"><div class="caption">Exposure</div></div>
+        <div class="border">
+        <div class="zone">
+            <div class="main">
+                <fieldset class="white">
+                    <div id="exposure_stops"></div>
+                    <div id="exposure_offset"></div>
+                    <div id="exposure_gamma"></div>
+                </fieldset>
+            </div>
+            <div class="buttons">
+                <button class="btn_ok main" type="button">Ok</button>
+                <button class="btn_cancel" type="button">Cancel</button>
+                <button class="btn_reset" type="button">Reset</button>
+                <button class="btn_apply" type="button">Preview</button>
+                <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+            </div>
+        </div>
+        </div>
+    </div>
 
 <script>
 function makeTriangleBlur() {
