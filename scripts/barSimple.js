@@ -41,6 +41,7 @@
                     Min:0,
                     Max:100,
                     Float: false,
+                    FloatPrecision: 1,
                     HalfScale: false,
                     Color: 'white',
                     Width: 201, 
@@ -106,7 +107,7 @@
                             else if (pos > self.Settings.Width + self.Settings.Dragger.Offset.X - 1) pos = self.Settings.Width + self.Settings.Dragger.Offset.X - 1;
                             self.Dragger.css('left', pos + 'px');
                             var value = ((pos - self.Settings.Dragger.Offset.X) / self.Ratio) + self.Settings.Min;
-                            if (self.Settings.Float) value = Math.round(value * 10.0) / 10.0;  
+                            if (self.Settings.Float) value = Math.round(value * Math.pow(10.0, self.Settings.FloatPrecision)) / Math.pow(10.0, self.Settings.FloatPrecision);  
                             else value = Math.round(value);
                             if (typeof self.Settings.onDrag == 'function') {
                                 self.Settings.onDrag({Value: value, Pos: pos});

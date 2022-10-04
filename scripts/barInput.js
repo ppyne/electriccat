@@ -32,6 +32,7 @@
                     Min:0,
                     Max:100,
                     Float: false,
+                    FloatPrecision: 1,
                     HalfScale: false,
                     Color: 'white'
                 };
