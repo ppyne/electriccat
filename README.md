@@ -17,7 +17,7 @@ To open an image file, simply drag and drop it onto the gray area or use the Fil
 
 A minimal Zoom feature has finaly been implemented.
 
-You can simply run it folowing this **DEMO LINK** [ppyne.github.io/electriccat/](https://ppyne.github.io/electriccat/).
+You can simply run it folowing this **DEMO LINK:** [ppyne.github.io/electriccat/](https://ppyne.github.io/electriccat/).
 
 Normally, it should not be necessary to load the application through a web server; it should run locally, directly in your browser, by opening the file named "index.html" in Chrome. Be sure to have all the folders present in the project nearby.
 
