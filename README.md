@@ -13,11 +13,13 @@ It is possible to undo the last 20 actions using the Edit / Undo menu.
 
 To open an image file, simply drag and drop it onto the gray area or use the File / Open menu.
 
-No Zoom function is implemented at the moment, therefore choose a small image to test.
+~~No Zoom function is implemented at the moment, therefore choose a small image to test.~~
 
-Normally, it is not necessary to load the application through a web server; it should run locally, directly in your browser, by opening the file named "index.html" in Chrome. Be sure to have all the folders present in the project nearby.
+A minimal Zoom feature has finaly been implemented.
 
-You can also simply run it folowing this demo link [ppyne.github.io/electriccat](https://ppyne.github.io/electriccat/).
+You can simply run it folowing this **DEMO LINK** [ppyne.github.io/electriccat/](https://ppyne.github.io/electriccat/).
+
+Normally, it should not be necessary to load the application through a web server; it should run locally, directly in your browser, by opening the file named "index.html" in Chrome. Be sure to have all the folders present in the project nearby.
 
 Here is an ideal test image, save it on your computer, 
 
@@ -39,7 +41,7 @@ Available features:
 - Rotate 90° Clockwise
 - Rotate 90° Counterclockwise
 - Arbitrary Rotation...
-- Resize...
+- Resize... (thanks to Image Magick)
 - Crop...
 
 ### Transform / Arbitrary Rotation...
@@ -59,10 +61,13 @@ Available features:
 Available features:
 
 - Levels... currently buggy (2022)
-- Auto Levels
+- Auto Levels (thanks to Image Magick)
+- Auto Gamma (thanks to Image Magick)
 - Brightness/Contrast...
-- Auto Contrast
+- Auto Contrast (thanks to Image Magick)
+- Sigmoidal Contrast... (thanks to Image Magick)
 - Curves...
+- Exposure... (according to Fred Weinhaus, thanks to Image Magick)
 - Color Balance...
 - Vibrance...
 - Hue/Saturation...
@@ -154,8 +159,11 @@ Available features:
 - Stylize
     - Sepia...
     - Vignette...
+    - Charcoal... (thanks to Image Magick)
+    - Sketch... (thanks to Image Magick)
     - Ink...
     - Painting...
+    - Morphology... (thanks to Image Magick)
     - Erosion...
     - Dialation...
     - Edge Work...
@@ -210,8 +218,8 @@ Available features:
 ## The modes (Mode menu)
 
 Available features:
-- Bitmap...
-- Indexed Color...
+- Bitmap... (dither)
+- Indexed Color... (quantize + dither)
 - Grayscale
 - RGB
 
