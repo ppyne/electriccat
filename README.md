@@ -1,5 +1,10 @@
 # Electric Cat
 
+<style>
+    .screenshot {
+        aspect-ratio: 1.5;
+    }
+</style>
 
 Electric Cat is an image processing software project, under development, implemented entirely in JavaScript, which mimics Photoshop 1.0 on Apple System 7, offering similar functionalities and interface. It's both a nod to Photoshop and to the Mac, and a study of what JS allows for image processing today (in 2018).
 
@@ -27,7 +32,7 @@ Here is an ideal test image, save it on your computer,
 
 then drag and drop it on the gray area to open it, like this:
 
-<img src="readme_images/Ouvrir.gif" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Ouvrir.gif" width="450" height="300" alt=""/>
 
 It is possible to carry out many treatments on an image, here are some eloquent examples.
 
@@ -46,15 +51,15 @@ Available features:
 
 ### Transform / Arbitrary Rotation...
 
-<img src="readme_images/ArbitraryRotation.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/ArbitraryRotation.png" width="450" height="300" alt=""/>
 
 ### Transform / Resize...
 
-<img src="readme_images/Resize.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Resize.png" width="450" height="300" alt=""/>
 
 ### Transform / Crop...
 
-<img src="readme_images/Crop.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Crop.png" width="450" height="300" alt=""/>
 
 ## The adjustments (Adjust menu)
 
@@ -83,45 +88,45 @@ Available features:
 
 ### Adjust / Levels...
 
-<img src="readme_images/Levels.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Levels.png" width="450" height="300" alt=""/>
 
 ### Adjust / Curves...
 
-<img src="readme_images/Curve.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Curve.png" width="450" height="300" alt=""/>
 
 ### Adjust / Color Balance...
 
-<img src="readme_images/ColorBalance.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/ColorBalance.png" width="450" height="300" alt=""/>
 
 ### Adjust / Channel Mixer...
 
-<img src="readme_images/ChannelMixer.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/ChannelMixer.png" width="450" height="300" alt=""/>
 
 ### Adjust / Hue/Saturation...
 
-<img src="readme_images/HueSaturation.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/HueSaturation.png" width="450" height="300" alt=""/>
 
 With the colorize option:
 
-<img src="readme_images/HueSaturationColorize.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/HueSaturationColorize.png" width="450" height="300" alt=""/>
 
 ### Adjust / Channel Mixer...
 
-<img src="readme_images/ChannelMixer.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/ChannelMixer.png" width="450" height="300" alt=""/>
 
 ### Adjust / Photo Filter...
 
 With all Kodak filters.
 
-<img src="readme_images/PhotoFilter.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/PhotoFilter.png" width="450" height="300" alt=""/>
 
 ### Adjust / Desaturate...
 
-<img src="readme_images/Desaturate.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Desaturate.png" width="450" height="300" alt=""/>
 
 ### Adjust / Posterize...
 
-<img src="readme_images/Posterize.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Posterize.png" width="450" height="300" alt=""/>
 
 ## Les filters (Filter menu)
 
@@ -181,57 +186,57 @@ Available features:
 
 ### Filter / Blur / Zoom Blur...
 
-<img src="readme_images/ZoomBlur.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/ZoomBlur.png" width="450" height="300" alt=""/>
 
 ### Filter / Sharpen / Unsharp Mask...
 
-<img src="readme_images/UnsharpMask.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/UnsharpMask.png" width="450" height="300" alt=""/>
 
 ### Filter / Noise / Median...
 
-<img src="readme_images/Median.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Median.png" width="450" height="300" alt=""/>
 
 ### Filter / Noise / Bilateral...
 
  Also known as inner blur.
 
-<img src="readme_images/Bilateral.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Bilateral.png" width="450" height="300" alt=""/>
 
 ### Filter / Pixelate / Hexagonal Pixelate...
 
-<img src="readme_images/HexagonalPixelate.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/HexagonalPixelate.png" width="450" height="300" alt=""/>
 
 ### Filter / Pixelate / Halftone...
 
-<img src="readme_images/Halftone.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Halftone.png" width="450" height="300" alt=""/>
 
 ### Filter / Distort / Pinch...
 
-<img src="readme_images/Pinch.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Pinch.png" width="450" height="300" alt=""/>
 
 ### Filter / Distort / Twirl...
 
-<img src="readme_images/Twirl.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Twirl.png" width="450" height="300" alt=""/>
 
 ### Filter / Distort / Disperse...
 
-<img src="readme_images/Disperse.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Disperse.png" width="450" height="300" alt=""/>
 
 ### Filter / Stylize / Watercolor...
 
-<img src="readme_images/Watercolor.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Watercolor.png" width="450" height="300" alt=""/>
 
 ### Filter / Stylize / Glow...
 
-<img src="readme_images/Glow.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Glow.png" width="450" height="300" alt=""/>
 
 ### Filter / Stylize / Difference of Gaussians...
 
-<img src="readme_images/DifferenceOfGaussians.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/DifferenceOfGaussians.png" width="450" height="300" alt=""/>
 
 ### Filter / Stylize / Solarize
 
-<img src="readme_images/Solarize.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Solarize.png" width="450" height="300" alt=""/>
 
 ## The modes (Mode menu)
 
@@ -243,8 +248,8 @@ Available features:
 
 ### Mode / Bitmap...
 
-<img src="readme_images/Bitmap.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/Bitmap.png" width="450" height="300" alt=""/>
 
 ### Mode / Indexed Color...
 
-<img src="readme_images/IndexedColor.png" width="900" height="600" style="aspect-ratio: 1.5;" alt=""/>
+<img class="screenshot" src="readme_images/IndexedColor.png" width="450" height="300" alt=""/>
