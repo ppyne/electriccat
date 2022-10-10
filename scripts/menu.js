@@ -533,6 +533,13 @@
                                             onClick: function () {
                                                 $('#dialog_twirl').Dialog('open');
                                             }
+                                        }, {
+                                            id: 'midisperse',
+                                            Caption: 'Disperse...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_disperse').Dialog('open');
+                                            }
                                         }
                                     ]
                                 }, {
@@ -575,11 +582,25 @@
                                                 $('#dialog_ink').Dialog('open');
                                             }
                                         }, {
+                                            id: 'miwatercolor',
+                                            Caption: 'Watercolor...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_watercolor').Dialog('open');
+                                            }
+                                        }, {
                                             id: 'mioil',
                                             Caption: 'Painting...',
                                             Disabled: true,
                                             onClick: function () {
                                                 $('#dialog_oil').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'miglow',
+                                            Caption: 'Glow...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_glow').Dialog('open');
                                             }
                                         }, {
                                             id: 'mimorphology',
@@ -629,6 +650,13 @@
                                             Disabled: true,
                                             onClick: function () {
                                                 makeSobel();
+                                            }
+                                        }, {
+                                            id: 'misobelim',
+                                            Caption: 'Find Edge IM',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                makeSobelIM();
                                             }
                                         }, {
                                             id: 'miembossmediumgray',

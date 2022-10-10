@@ -5434,6 +5434,9 @@ var asm = createWasm();
 var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__wasm_call_ctors");
 
 /** @type {function(...*):?} */
+var _malloc = Module["_malloc"] = createExportWrapper("malloc");
+
+/** @type {function(...*):?} */
 var __IMResize = Module["__IMResize"] = createExportWrapper("_IMResize");
 
 /** @type {function(...*):?} */
@@ -5482,13 +5485,22 @@ var __IMCmdResize = Module["__IMCmdResize"] = createExportWrapper("_IMCmdResize"
 var __IMExposure = Module["__IMExposure"] = createExportWrapper("_IMExposure");
 
 /** @type {function(...*):?} */
+var __IMGlow = Module["__IMGlow"] = createExportWrapper("_IMGlow");
+
+/** @type {function(...*):?} */
+var __IMSobel = Module["__IMSobel"] = createExportWrapper("_IMSobel");
+
+/** @type {function(...*):?} */
+var __IMWatercolor = Module["__IMWatercolor"] = createExportWrapper("_IMWatercolor");
+
+/** @type {function(...*):?} */
+var __IMDisperse = Module["__IMDisperse"] = createExportWrapper("_IMDisperse");
+
+/** @type {function(...*):?} */
 var _main = Module["_main"] = createExportWrapper("main");
 
 /** @type {function(...*):?} */
 var _fflush = Module["_fflush"] = createExportWrapper("fflush");
-
-/** @type {function(...*):?} */
-var _malloc = Module["_malloc"] = createExportWrapper("malloc");
 
 /** @type {function(...*):?} */
 var _emscripten_stack_init = Module["_emscripten_stack_init"] = function() {
@@ -5525,8 +5537,8 @@ var dynCall_iijji = Module["dynCall_iijji"] = createExportWrapper("dynCall_iijji
 /** @type {function(...*):?} */
 var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
 
-var ___start_em_js = Module['___start_em_js'] = 574880;
-var ___stop_em_js = Module['___stop_em_js'] = 576048;
+var ___start_em_js = Module['___start_em_js'] = 575024;
+var ___stop_em_js = Module['___stop_em_js'] = 576192;
 
 
 

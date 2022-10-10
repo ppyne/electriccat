@@ -483,6 +483,11 @@ function makeSobel() {
     $('#src').attr('src', canvas.toDataURL('image/png'));
 }
 
+function makeSobelIM() {
+    IMSobel($('#src'), $('#dst'));
+    makeOk('Find Edge IM');
+}
+
 function makeLaplace() {
     var img = $('#src').get(0);
     if (img.width == 0 || img.height == 0) return null;
@@ -868,6 +873,10 @@ function enableMenusOnOpen() {
     $('#micurves').removeClass('disabled');
     $('#miphotofilter').removeClass('disabled');
     $('#miexposure').removeClass('disabled');
+    $('#miglow').removeClass('disabled');
+    $('#misobelim').removeClass('disabled');
+    $('#miwatercolor').removeClass('disabled');
+    $('#midisperse').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -943,6 +952,10 @@ function disableMenusOnClose() {
     $('#micurves').addClass('disabled');
     $('#miphotofilter').addClass('disabled');
     $('#miexposure').addClass('disabled');
+    $('#miglow').addClass('disabled');
+    $('#misobelim').addClass('disabled');
+    $('#miwatercolor').addClass('disabled');
+    $('#midisperse').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -5829,6 +5842,192 @@ $(function() {
                 <button class="btn_apply" type="button">Preview</button>
             </div>
         </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_glow').Dialog({
+                onInit: function() {
+                    $('#glow_amount').barInput({"Label":"Amount","Min":1,"Max":2,"Default":1.5,"Float":true,"HalfScale":false,"FloatPrecision":2});
+                    $('#glow_softening').barInput({"Label":"Softening","Min":0,"Max":150,"Default":0,"Float":false,"HalfScale":false});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#glow_amount').barInput('reset');
+                    $('#glow_softening').barInput('reset');
+                },
+                onOk: function() {
+                    IMGlow($('#src'), parseFloat($('#glow_amount input').val()), parseInt($('#glow_softening input').val()), $('#dst'));
+                    makeOk('Glow');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMGlow($('#src'), parseFloat($('#glow_amount input').val()), parseInt($('#glow_softening input').val()), $('#dst'));
+                },
+                onReset: function () {
+                    $('#glow_amount').barInput('reset');
+                    $('#glow_softening').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_glow">
+        <div class="bar"><div class="caption">Glow</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="glow_amount"></div>
+                        <div id="glow_softening"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_watercolor').Dialog({
+                onInit: function() {
+                    $('#watercolor_edge').barInput({"Label":"Edge","Min":1,"Max":20,"Default":5,"Float":true,"HalfScale":false,"FloatPrecision":2});
+                    $('#watercolor_mixing').barInput({"Label":"Mixing","Min":0,"Max":100,"Default":33,"Float":false,"HalfScale":true});
+                    $('#watercolor_smoothing').barInput({"Label":"Smoothing","Min":0,"Max":20,"Default":0,"Float":false,"HalfScale":false});
+                    $('#watercolor_contrast').barInput({"Label":"Contrast","Min":0,"Max":30,"Default":0,"Float":true,"HalfScale":false,"FloatPrecision":2});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#watercolor_edge').barInput('reset');
+                    $('#watercolor_mixing').barInput('reset');
+                    $('#watercolor_smoothing').barInput('reset');
+                    $('#watercolor_contrast').barInput('reset');
+                },
+                onOk: function() {
+                    IMWatercolor($('#src'), parseInt($('#watercolor_smoothing input').val()), parseFloat($('#watercolor_edge input').val()), parseInt($('#watercolor_mixing input').val()), parseFloat($('#watercolor_contrast input').val()), $('#dst'));
+                    makeOk('Watercolor');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMWatercolor($('#src'), parseInt($('#watercolor_smoothing input').val()), parseFloat($('#watercolor_edge input').val()), parseInt($('#watercolor_mixing input').val()), parseFloat($('#watercolor_contrast input').val()), $('#dst'));
+                },
+                onReset: function () {
+                    $('#watercolor_edge').barInput('reset');
+                    $('#watercolor_mixing').barInput('reset');
+                    $('#watercolor_smoothing').barInput('reset');
+                    $('#watercolor_contrast').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+<script>
+    $(function() {
+        $('#dialog_disperse').Dialog({
+            onInit: function() {
+                $('#disperse_spread').barInput({"Label":"Spread","Min":0,"Max":50,"Default":5,"Float":false,"HalfScale":false});
+                $('#disperse_density').barInput({"Label":"Density","Min":0,"Max":50,"Default":5,"Float":false,"HalfScale":false});
+                $('#disperse_curviness').barInput({"Label":"Curviness","Min":0,"Max":50,"Default":5,"Float":false,"HalfScale":false});
+                $('#disperse_seed').barInput({"Label":"Random Seed","Min":0,"Max":200,"Default":0,"Float":false,"HalfScale":false});
+            },
+            onOpen: function() {
+                $('#dst').attr('src', $('#src').attr('src'));
+                $('#src').hide();
+            },
+            onClose: function() {
+                $('#src').show();
+                $('#disperse_spread').barInput('reset');
+                $('#disperse_density').barInput('reset');
+                $('#disperse_curviness').barInput('reset');
+                $('#disperse_seed').barInput('reset');
+            },
+            onOk: function() {
+                IMDisperse($('#src'), parseInt($('#disperse_spread input').val()), parseInt($('#disperse_density input').val()), parseInt($('#disperse_curviness input').val()), parseInt($('#disperse_seed input').val()), $('#dst'));
+                makeOk('Disperse');
+            },
+            onCancel: function() {
+                makeCancel();
+            },
+            onApply: function () {
+                IMDisperse($('#src'), parseInt($('#disperse_spread input').val()), parseInt($('#disperse_density input').val()), parseInt($('#disperse_curviness input').val()), parseInt($('#disperse_seed input').val()), $('#dst'));
+            },
+            onReset: function () {
+                $('#disperse_spread').barInput('reset');
+                $('#disperse_density').barInput('reset');
+                $('#disperse_curviness').barInput('reset');
+                $('#disperse_seed').barInput('reset');
+                $('#dst').attr('src', $('#src').attr('src'));
+            }
+        });
+    });
+</script>
+
+<div class="dialog" id="dialog_disperse">
+    <div class="bar"><div class="caption">Disperse</div></div>
+    <div class="border">
+        <div class="zone">
+            <div class="main">
+                <fieldset class="white">
+                    <div id="disperse_spread"></div>
+                    <div id="disperse_density"></div>
+                    <div id="disperse_curviness"></div>
+                    <div id="disperse_seed"></div>
+                </fieldset>
+            </div>
+            <div class="buttons">
+                <button class="btn_ok main" type="button">Ok</button>
+                <button class="btn_cancel" type="button">Cancel</button>
+                <button class="btn_reset" type="button">Reset</button>
+                <button class="btn_apply" type="button">Preview</button>
+                <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <div class="dialog" id="dialog_watercolor">
+        <div class="bar"><div class="caption">Watercolor</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="watercolor_edge"></div>
+                        <div id="watercolor_mixing"></div>
+                        <div id="watercolor_smoothing"></div>
+                        <div id="watercolor_contrast"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
         </div>
     </div>
 
