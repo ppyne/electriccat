@@ -1,11 +1,5 @@
 # Electric Cat
 
-<style>
-    .screenshot {
-        aspect-ratio: 1.5;
-    }
-</style>
-
 Electric Cat is an image processing software project, under development, implemented entirely in JavaScript, which mimics Photoshop 1.0 on Apple System 7, offering similar functionalities and interface. It's both a nod to Photoshop and to the Mac, and a study of what JS allows for image processing today (in 2018).
 
 The software uses libraries and algorithms transcribed into JS from Gimp, ImageMagick and many other free software. Not everything is optimized yet, and some processing, depending on the parameters used, can take a lot of CPU time when they are not performed by the GPU with WebGL, discovered during the project.
