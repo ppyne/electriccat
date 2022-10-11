@@ -877,6 +877,7 @@ function enableMenusOnOpen() {
     $('#misobelim').removeClass('disabled');
     $('#miwatercolor').removeClass('disabled');
     $('#midisperse').removeClass('disabled');
+    $('#micrystallize').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -956,6 +957,7 @@ function disableMenusOnClose() {
     $('#misobelim').addClass('disabled');
     $('#miwatercolor').addClass('disabled');
     $('#midisperse').addClass('disabled');
+    $('#micrystallize').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -6031,6 +6033,61 @@ $(function() {
         </div>
     </div>
 
+    <script>
+        $(function() {
+            $('#dialog_crystallize').Dialog({
+                onInit: function() {
+                    $('#crystallize_number').barInput({"Label":"Number","Min":25,"Max":5000,"Default":500,"Float":false,"HalfScale":false});
+                    $('#crystallize_seed').barInput({"Label":"Seed","Min":0,"Max":200,"Default":0,"Float":false,"HalfScale":false});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#crystallize_number').barInput('reset');
+                    $('#crystallize_seed').barInput('reset');
+                },
+                onOk: function() {
+                    IMCrystallize($('#src'), parseInt($('#crystallize_number input').val()), parseInt($('#crystallize_seed input').val()), $('#dst'));
+                    makeOk('Crystallize');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMCrystallize($('#src'), parseInt($('#crystallize_number input').val()), parseInt($('#crystallize_seed input').val()), $('#dst'));
+                },
+                onReset: function () {
+                    $('#crystallize_number').barInput('reset');
+                    $('#crystallize_seed').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_crystallize">
+        <div class="bar"><div class="caption">Crystallize</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="crystallize_number"></div>
+                        <div id="crystallize_seed"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div id="containment"><img id="src"><img id="dst"><div id="grid" class="disabled"></div></div>

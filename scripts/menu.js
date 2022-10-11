@@ -506,6 +506,13 @@
                                             onClick: function () {
                                                 $('#dialog_halftone').Dialog('open');
                                             }
+                                        }, {
+                                            id: 'micrystallize',
+                                            Caption: 'Crystallize...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_crystallize').Dialog('open');
+                                            }
                                         }
                                     ]
                                 }, {

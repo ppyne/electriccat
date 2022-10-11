@@ -275,6 +275,14 @@ let IMDisperse = ($src, spread, density, curviness, reseed, $dst) => {
     _IMClearFS();
 };
 
+let IMCrystallize = ($src, n, seed, $dst) => {
+    const [ width, height ] = _IMSetSource($src);
+    if (width === false) return;
+    _IMCrystallize(width, height, n, seed);
+    _IMSetDestination($dst, width, height);
+    _IMClearFS();
+};
+
 let _onIMReady = () => {
     _IMResize = Module.cwrap('_IMResize', null, ['number', 'number', 'number', 'number', 'number', 'number']);
     _IMCmdResize = Module.cwrap('_IMCmdResize', null, ['number', 'number', 'number', 'number', 'string']);
@@ -295,6 +303,7 @@ let _onIMReady = () => {
     _IMSobel = Module.cwrap('_IMSobel', null, ['number', 'number']);
     _IMWatercolor = Module.cwrap('_IMWatercolor', null, ['number', 'number', 'number', 'number', 'number', 'number']);
     _IMDisperse = Module.cwrap('_IMDisperse', null, ['number', 'number', 'number', 'number', 'number', 'number']);
+    _IMCrystallize = Module.cwrap('_IMCrystallize', null, ['number', 'number', 'number', 'number']);
 };
 
 $(window).on('IMReady', _onIMReady);

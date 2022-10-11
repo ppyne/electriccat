@@ -3915,6 +3915,18 @@ function console_log_len(len) { console.log('len', len); }
   }
   }
 
+  function ___syscall_rmdir(path) {
+  try {
+  
+      path = SYSCALLS.getStr(path);
+      FS.rmdir(path);
+      return 0;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e instanceof FS.ErrnoError)) throw e;
+    return -e.errno;
+  }
+  }
+
   function ___syscall_stat64(path, buf) {
   try {
   
@@ -5393,6 +5405,7 @@ var asmLibraryArg = {
   "__syscall_newfstatat": ___syscall_newfstatat,
   "__syscall_openat": ___syscall_openat,
   "__syscall_readlinkat": ___syscall_readlinkat,
+  "__syscall_rmdir": ___syscall_rmdir,
   "__syscall_stat64": ___syscall_stat64,
   "__syscall_symlink": ___syscall_symlink,
   "__syscall_unlinkat": ___syscall_unlinkat,
@@ -5497,6 +5510,9 @@ var __IMWatercolor = Module["__IMWatercolor"] = createExportWrapper("_IMWatercol
 var __IMDisperse = Module["__IMDisperse"] = createExportWrapper("_IMDisperse");
 
 /** @type {function(...*):?} */
+var __IMCrystallize = Module["__IMCrystallize"] = createExportWrapper("_IMCrystallize");
+
+/** @type {function(...*):?} */
 var _main = Module["_main"] = createExportWrapper("main");
 
 /** @type {function(...*):?} */
@@ -5537,8 +5553,8 @@ var dynCall_iijji = Module["dynCall_iijji"] = createExportWrapper("dynCall_iijji
 /** @type {function(...*):?} */
 var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
 
-var ___start_em_js = Module['___start_em_js'] = 575024;
-var ___stop_em_js = Module['___stop_em_js'] = 576192;
+var ___start_em_js = Module['___start_em_js'] = 575136;
+var ___stop_em_js = Module['___stop_em_js'] = 576304;
 
 
 
