@@ -63,6 +63,7 @@
                                     Caption: 'Copy',
                                     Disabled: true,
                                     onClick: function () {
+                                        makeCopy();
                                     }
                                 }, {
                                     id: 'mipaste',

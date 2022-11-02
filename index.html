@@ -883,6 +883,7 @@ function enableMenusOnOpen() {
     $('#mifrosted').removeClass('disabled');
     $('#milucisarteffect').removeClass('disabled');
     $('#mishadowhighlight').removeClass('disabled');
+    $('#micopy').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -968,6 +969,7 @@ function disableMenusOnClose() {
     $('#mifrosted').addClass('disabled');
     $('#milucisarteffect').addClass('disabled');
     $('#mishadowhighlight').addClass('disabled');
+    $('#micopy').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -975,20 +977,40 @@ function makeOpenFile() {
   var file = document.querySelector('#fileinput').files[0];
   if (typeof file != 'undefined') {
       if (file.type.match(/^image\/(jpg|jpeg|webp|png|gif)/)) {
-          var reader = new FileReader();
-          reader.addEventListener("load", function () {
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
                 makeOpen(reader.result, file.name, file.type);
-          }, false);
-          reader.readAsDataURL(file);
+            }, false);
+            reader.readAsDataURL(file);
       } else {
-          //alert('Only PNG, JPEG, WEBP and GIF are handled.');
-          $('#mb_unsupported').messageBox('open');
+            //alert('Only PNG, JPEG, WEBP and GIF are handled.');
+            $('#mb_unsupported').messageBox('open');
       }
   }
 }
 
-function makeOpen(src, name, type) {
+let toPng = async (src) => {
+    return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.onload = () => {
+            let canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => {
+            reject('error');
+        };
+        img.src = src;
+    });
+};
+
+let makeOpen = async (src, name, type) => {
     if (src.length > 0) {
+        // Ensure we always have a PNG
+        if (type !== 'image/png') src = await toPng(src);
         resetZoom();
         State.save("Open");
         $('#src').off('load');
@@ -1039,10 +1061,24 @@ let makePaste = async (event) => {
         }
     }
     if (typeof event !== 'undefined') event.preventDefault();
-}
+};
+
+let makeCopy = (event) => {
+    if (navigator.clipboard) {
+        let url = $('#src').attr('src');
+        if (url !== undefined) {
+            let data = urlToB64(url);
+            let blob = b64toBlob(data.Base64, data.Mime);
+            const items = [new ClipboardItem({ [data.Mime]: blob })];
+            navigator.clipboard.write(items);
+        }
+    }
+    if (typeof event !== 'undefined') event.preventDefault();
+};
 
 $(() => {
     $(document).on('paste', makePaste);
+    $(document).on('copy', makeCopy);
 });
 
 function updateStatusBarDimensions() {
