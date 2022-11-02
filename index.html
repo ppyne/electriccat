@@ -878,6 +878,11 @@ function enableMenusOnOpen() {
     $('#miwatercolor').removeClass('disabled');
     $('#midisperse').removeClass('disabled');
     $('#micrystallize').removeClass('disabled');
+    $('#misoftlight').removeClass('disabled');
+    $('#midavehilleffect').removeClass('disabled');
+    $('#mifrosted').removeClass('disabled');
+    $('#milucisarteffect').removeClass('disabled');
+    $('#mishadowhighlight').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -958,6 +963,11 @@ function disableMenusOnClose() {
     $('#miwatercolor').addClass('disabled');
     $('#midisperse').addClass('disabled');
     $('#micrystallize').addClass('disabled');
+    $('#misoftlight').addClass('disabled');
+    $('#midavehilleffect').addClass('disabled');
+    $('#mifrosted').addClass('disabled');
+    $('#milucisarteffect').addClass('disabled');
+    $('#mishadowhighlight').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -6089,6 +6099,333 @@ $(function() {
         </div>
     </div>
 
+    <script>
+        $(function() {
+            $('#dialog_softlight').Dialog({
+                onInit: function() {
+                    $('#softlight_intensity').barInput({"Label":"Intensity","Min":0,"Max":200,"Default":80,"Float":false,"HalfScale":false});
+                    $('#softlight_smooth').barInput({"Label":"Smooth","Min":0,"Max":500,"Default":50,"Float":false,"HalfScale":false});
+                    $('#softlight_percent').barInput({"Label":"Percent","Min":0,"Max":100,"Default":5,"Float":false,"HalfScale":false});
+                    $('#softlight_color').val('#ffffff');
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#softlight_intensity').barInput('reset');
+                    $('#softlight_smooth').barInput('reset');
+                    $('#softlight_percent').barInput('reset');
+                    $('#softlight_color').val('#ffffff');
+                },
+                onOk: function() {
+                    IMSoftLight($('#src'), parseInt($('#softlight_intensity input').val()), parseInt($('#softlight_smooth input').val()), parseInt($('#softlight_percent input').val()), $('#softlight_color').val(), $('#dst'));
+                    makeOk('Soft light');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMSoftLight($('#src'), parseInt($('#softlight_intensity input').val()), parseInt($('#softlight_smooth input').val()), parseInt($('#softlight_percent input').val()), $('#softlight_color').val(), $('#dst'));
+                },
+                onReset: function () {
+                    $('#softlight_intensity').barInput('reset');
+                    $('#softlight_smooth').barInput('reset');
+                    $('#softlight_percent').barInput('reset');
+                    $('#softlight_color').val('#ffffff');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_softlight">
+        <div class="bar"><div class="caption">Soft light</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="softlight_intensity"></div>
+                        <div id="softlight_smooth"></div>
+                        <div id="softlight_percent"></div>
+                        <div style="margin-top:5px;"><label for="softlight_color" style="display:inline-block;margin-right:7px;">Color</label><input id="softlight_color" type="color" /></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_DaveHillEffect').Dialog({
+                onInit: function() {
+                    $('#DaveHillEffect_brightness').barInput({"Label":"Brightness","Min":0,"Max":2,"Default":1,"Float":true,"HalfScale":false,"FloatPrecision":2});
+                    $('#DaveHillEffect_contrast').barInput({"Label":"Contrast","Min":-10,"Max":10,"Default":0,"Float":true,"HalfScale":true,"FloatPrecision":2});
+                    $('#DaveHillEffect_gain').barInput({"Label":"Gain","Min":0,"Max":100,"Default":40,"Float":false,"HalfScale":false});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#DaveHillEffect_brightness').barInput('reset');
+                    $('#DaveHillEffect_contrast').barInput('reset');
+                    $('#DaveHillEffect_gain').barInput('reset');
+                },
+                onOk: function() {
+                    IMDaveHillEffect($('#src'), parseFloat($('#DaveHillEffect_brightness input').val()), parseFloat($('#DaveHillEffect_contrast input').val()), parseInt($('#DaveHillEffect_gain input').val()), $('#dst'));
+                    makeOk('Dave Hill Effect');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMDaveHillEffect($('#src'), parseFloat($('#DaveHillEffect_brightness input').val()), parseFloat($('#DaveHillEffect_contrast input').val()), parseInt($('#DaveHillEffect_gain input').val()), $('#dst'));
+                },
+                onReset: function () {
+                    $('#DaveHillEffect_brightness').barInput('reset');
+                    $('#DaveHillEffect_contrast').barInput('reset');
+                    $('#DaveHillEffect_gain').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_DaveHillEffect">
+        <div class="bar"><div class="caption">Dave Hill Effect</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="DaveHillEffect_brightness"></div>
+                        <div id="DaveHillEffect_contrast"></div>
+                        <div id="DaveHillEffect_gain"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_frosted').Dialog({
+                onInit: function() {
+                    $('#frosted_spread').barInput({"Label":"Spread","Min":0,"Max":50,"Default":5,"Float":false,"HalfScale":false});
+                    $('#frosted_blur').barInput({"Label":"Blur","Min":0,"Max":50,"Default":5,"Float":false,"HalfScale":false});
+                    $('#frosted_seed').barInput({"Label":"Seed","Min":0,"Max":200,"Default":0,"Float":false,"HalfScale":false});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#frosted_spread').barInput('reset');
+                    $('#frosted_blur').barInput('reset');
+                    $('#frosted_seed').barInput('reset');
+                },
+                onOk: function() {
+                    IMFrosted($('#src'), parseInt($('#frosted_spread input').val()), parseInt($('#frosted_blur input').val()), parseInt($('#frosted_seed input').val()), $('#dst'));
+                    makeOk('Frosted');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMFrosted($('#src'), parseInt($('#frosted_spread input').val()), parseInt($('#frosted_blur input').val()), parseInt($('#frosted_seed input').val()), $('#dst'));
+                },
+                onReset: function () {
+                    $('#frosted_spread').barInput('reset');
+                    $('#frosted_blur').barInput('reset');
+                    $('#frosted_seed').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_frosted">
+        <div class="bar"><div class="caption">Frosted</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="frosted_spread"></div>
+                        <div id="frosted_blur"></div>
+                        <div id="frosted_seed"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_LucisArtEffect').Dialog({
+                onInit: function() {
+                    $('#LucisArtEffect_gain').barInput({"Label":"Gain","Min":0,"Max":2,"Default":0.3,"Float":true,"HalfScale":false,"FloatPrecision":2});
+                    $('#LucisArtEffect_saturation').barInput({"Label":"Saturation","Min":0,"Max":200,"Default":60,"Float":false,"HalfScale":false});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#LucisArtEffect_gain').barInput('reset');
+                    $('#LucisArtEffect_saturation').barInput('reset');
+                },
+                onOk: function() {
+                    IMLucisArtEffect($('#src'), parseFloat($('#LucisArtEffect_gain input').val()), parseInt($('#LucisArtEffect_saturation input').val()), $('#dst'));
+                    makeOk('Lucis Art Effect');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMLucisArtEffect($('#src'), parseFloat($('#LucisArtEffect_gain input').val()), parseInt($('#LucisArtEffect_saturation input').val()), $('#dst'));
+                },
+                onReset: function () {
+                    $('#LucisArtEffect_gain').barInput('reset');
+                    $('#LucisArtEffect_saturation').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_LucisArtEffect">
+        <div class="bar"><div class="caption">Lucis Art Effect</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="LucisArtEffect_gain"></div>
+                        <div id="LucisArtEffect_saturation"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_ShadowHighlight').Dialog({
+                onInit: function() {
+                    $('#ShadowHighlight_samount').barInput({"Label":"Shadow amount","Min":0,"Max":100,"Default":50,"Float":false,"HalfScale":false});
+                    $('#ShadowHighlight_swidth').barInput({"Label":"Shadow width","Min":0,"Max":100,"Default":50,"Float":false,"HalfScale":false});
+                    $('#ShadowHighlight_sradius').barInput({"Label":"Shadow radius","Min":0,"Max":100,"Default":30,"Float":false,"HalfScale":false});
+                    $('#ShadowHighlight_hamount').barInput({"Label":"Highlight amount","Min":0,"Max":100,"Default":0,"Float":false,"HalfScale":false});
+                    $('#ShadowHighlight_hwidth').barInput({"Label":"Highlight width","Min":0,"Max":100,"Default":50,"Float":false,"HalfScale":false});
+                    $('#ShadowHighlight_hradius').barInput({"Label":"Highlight radius","Min":0,"Max":100,"Default":30,"Float":false,"HalfScale":false});
+                    $('#ShadowHighlight_mamount').barInput({"Label":"Midtone amount","Min":-100,"Max":100,"Default":0,"Float":false,"HalfScale":true});
+                    $('#ShadowHighlight_ccamount').barInput({"Label":"Color correction","Min":-100,"Max":100,"Default":0,"Float":false,"HalfScale":true});
+                    $('#ShadowHighlight_bclip').barInput({"Label":"Black clip","Min":0,"Max":100,"Default":0.01,"Float":true,"HalfScale":false,"FloatPrecision":2});
+                    $('#ShadowHighlight_wclip').barInput({"Label":"White clip","Min":0,"Max":100,"Default":0.01,"Float":true,"HalfScale":false,"FloatPrecision":2});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#ShadowHighlight_samount').barInput('reset');
+                    $('#ShadowHighlight_swidth').barInput('reset');
+                    $('#ShadowHighlight_sradius').barInput('reset');
+                    $('#ShadowHighlight_hamount').barInput('reset');
+                    $('#ShadowHighlight_hwidth').barInput('reset');
+                    $('#ShadowHighlight_hradius').barInput('reset');
+                    $('#ShadowHighlight_mamount').barInput('reset');
+                    $('#ShadowHighlight_ccamount').barInput('reset');
+                    $('#ShadowHighlight_bclip').barInput('reset');
+                    $('#ShadowHighlight_wclip').barInput('reset');
+                },
+                onOk: function() {
+                    IMShadowHighlight($('#src'), parseInt($('#ShadowHighlight_samount input').val()), parseInt($('#ShadowHighlight_swidth input').val()), parseInt($('#ShadowHighlight_sradius input').val()), parseInt($('#ShadowHighlight_hamount input').val()), parseInt($('#ShadowHighlight_hwidth input').val()), parseInt($('#ShadowHighlight_hradius input').val()), parseInt($('#ShadowHighlight_mamount input').val()), parseInt($('#ShadowHighlight_ccamount input').val()), parseFloat($('#ShadowHighlight_bclip input').val()), parseFloat($('#ShadowHighlight_wclip input').val()), $('#dst'));
+                    makeOk('Shadow and highlight');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMShadowHighlight($('#src'), parseInt($('#ShadowHighlight_samount input').val()), parseInt($('#ShadowHighlight_swidth input').val()), parseInt($('#ShadowHighlight_sradius input').val()), parseInt($('#ShadowHighlight_hamount input').val()), parseInt($('#ShadowHighlight_hwidth input').val()), parseInt($('#ShadowHighlight_hradius input').val()), parseInt($('#ShadowHighlight_mamount input').val()), parseInt($('#ShadowHighlight_ccamount input').val()), parseFloat($('#ShadowHighlight_bclip input').val()), parseFloat($('#ShadowHighlight_wclip input').val()), $('#dst'));
+                },
+                onReset: function () {
+                    $('#ShadowHighlight_samount').barInput('reset');
+                    $('#ShadowHighlight_swidth').barInput('reset');
+                    $('#ShadowHighlight_sradius').barInput('reset');
+                    $('#ShadowHighlight_hamount').barInput('reset');
+                    $('#ShadowHighlight_hwidth').barInput('reset');
+                    $('#ShadowHighlight_hradius').barInput('reset');
+                    $('#ShadowHighlight_mamount').barInput('reset');
+                    $('#ShadowHighlight_ccamount').barInput('reset');
+                    $('#ShadowHighlight_bclip').barInput('reset');
+                    $('#ShadowHighlight_wclip').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_ShadowHighlight">
+        <div class="bar"><div class="caption">Shadow and highlight</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="ShadowHighlight_samount"></div>
+                        <div id="ShadowHighlight_swidth"></div>
+                        <div id="ShadowHighlight_sradius"></div>
+                        <div id="ShadowHighlight_hamount"></div>
+                        <div id="ShadowHighlight_hwidth"></div>
+                        <div id="ShadowHighlight_hradius"></div>
+                        <div id="ShadowHighlight_mamount"></div>
+                        <div id="ShadowHighlight_ccamount"></div>
+                        <div id="ShadowHighlight_bclip"></div>
+                        <div id="ShadowHighlight_wclip"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="containment"><img id="src"><img id="dst"><div id="grid" class="disabled"></div></div>
 </div>

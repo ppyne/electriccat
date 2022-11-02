@@ -241,6 +241,13 @@
                                          $('#dialog_exposure').Dialog('open');
                                     }
                                 }, {
+                                    id: 'mishadowhighlight',
+                                    Disabled: true,
+                                    Caption: 'Shadow and highlight...',
+                                    onClick: function () {
+                                         $('#dialog_ShadowHighlight').Dialog('open');
+                                    }
+                                }, {
                                     Separator: true
                                 }, {
                                     id: 'micolorbalance',
@@ -547,6 +554,13 @@
                                             onClick: function () {
                                                 $('#dialog_disperse').Dialog('open');
                                             }
+                                        }, {
+                                            id: 'mifrosted',
+                                            Caption: 'Frosted...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_frosted').Dialog('open');
+                                            }
                                         }
                                     ]
                                 }, {
@@ -608,6 +622,27 @@
                                             Disabled: true,
                                             onClick: function () {
                                                 $('#dialog_glow').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'misoftlight',
+                                            Caption: 'Soft light...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_softlight').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'midavehilleffect',
+                                            Caption: 'Dave Hill Effect...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_DaveHillEffect').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'milucisarteffect',
+                                            Caption: 'Lucis Art Effect...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_LucisArtEffect').Dialog('open');
                                             }
                                         }, {
                                             id: 'mimorphology',
