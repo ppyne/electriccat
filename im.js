@@ -203,6 +203,14 @@ let IMAutoGamma = ($src, $dst, channels = IMEnumChannels.RGB) => {
     _IMClearFS();
 };
 
+let IMCmdAutoGamma = ($src, $dst) => {
+    const [ width, height ] = _IMSetSource($src);
+    if (width === false) return;
+    _IMCmdAutoGamma(width, height);
+    _IMSetDestination($dst, width, height);
+    _IMClearFS();
+};
+
 let IMContrast = ($src, $dst, increase = true) => {
     const [ width, height ] = _IMSetSource($src);
     if (width === false) return;
