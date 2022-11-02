@@ -1001,7 +1001,7 @@ let toPng = async (src) => {
             resolve(canvas.toDataURL('image/png'));
         };
         img.onerror = () => {
-            reject('error');
+            reject('error while converting to PNG URL');
         };
         img.src = src;
     });
