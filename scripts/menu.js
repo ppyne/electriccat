@@ -37,21 +37,21 @@
                                     Items: [
                                         {
                                             id: 'miexporttopng',
-                                            Caption: 'Export to PNG32...',
+                                            Caption: 'To browser native PNG...',
                                             Disabled: true,
                                             onClick: function () {
                                                 $('#dialog_ExportToPng').Dialog('open');
                                             }
                                         }, {
                                             id: 'miexporttojpeg',
-                                            Caption: 'Export to JPEG...',
+                                            Caption: 'To browser native JPEG...',
                                             Disabled: true,
                                             onClick: function () {
                                                 $('#dialog_ExportToJpeg').Dialog('open');
                                             }
                                         }, {
                                             id: 'miexporttowebp',
-                                            Caption: 'Export to WEBP...',
+                                            Caption: 'To browser native WEBP...',
                                             Disabled: true,
                                             onClick: function () {
                                                 $('#dialog_ExportToWebp').Dialog('open');
