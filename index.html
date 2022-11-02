@@ -1017,6 +1017,34 @@ function makeOpen(src, name, type) {
     }
 }
 
+let makePaste = async (event) => {
+    if (navigator.clipboard) {
+        let items = await navigator.clipboard.read();
+        for (const item of items) {
+            if (item.types.includes('image/png')) {
+                const blob = await item.getType('image/png');
+                // Blob to png type URL
+                var image = new Image();
+                $(image).on('load', () => {
+                    let canvas = document.createElement("canvas");
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    let ctx = canvas.getContext("2d");
+                    ctx.drawImage(image, 0, 0);
+                    makeOpen(canvas.toDataURL('image/png'), 'Pasted', 'image/png');
+                });
+                image.src = URL.createObjectURL(blob);
+                break;
+            }
+        }
+    }
+    if (typeof event !== 'undefined') event.preventDefault();
+}
+
+$(() => {
+    $(document).on('paste', makePaste);
+});
+
 function updateStatusBarDimensions() {
     $('.dimensions').text('Dimensions: '+$('#src').get(0).width+'px × '+$('#src').get(0).height+'px');
 }

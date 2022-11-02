@@ -59,12 +59,6 @@
                                 }, {
                                     Separator: true
                                 }, {
-                                    id: 'micut',
-                                    Caption: 'Cut',
-                                    Disabled: true,
-                                    onClick: function () {
-                                    }
-                                }, {
                                     id: 'micopy',
                                     Caption: 'Copy',
                                     Disabled: true,
@@ -73,8 +67,9 @@
                                 }, {
                                     id: 'mipaste',
                                     Caption: 'Paste',
-                                    Disabled: true,
+                                    Disabled: false,
                                     onClick: function () {
+                                        makePaste();
                                     }
                                 }
                             ]
