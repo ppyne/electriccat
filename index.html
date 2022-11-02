@@ -884,6 +884,9 @@ function enableMenusOnOpen() {
     $('#milucisarteffect').removeClass('disabled');
     $('#mishadowhighlight').removeClass('disabled');
     $('#micopy').removeClass('disabled');
+    $('#miexporttopng').removeClass('disabled');
+    $('#miexporttojpeg').removeClass('disabled');
+    $('#miexporttowebp').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -970,6 +973,9 @@ function disableMenusOnClose() {
     $('#milucisarteffect').addClass('disabled');
     $('#mishadowhighlight').addClass('disabled');
     $('#micopy').addClass('disabled');
+    $('#miexporttopng').addClass('disabled');
+    $('#miexporttojpeg').addClass('disabled');
+    $('#miexporttowebp').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -989,6 +995,57 @@ function makeOpenFile() {
   }
 }
 
+let exportToJpeg = async () => {
+    toUrlType($('#src').attr('src'), 'image/jpeg', parseFloat($('#ExportToJpeg_quality input').val()) / 100.0).then((url) => {
+        let data = urlToB64(url);
+        let blob = b64toBlob(data.Base64, data.Mime);
+        let name = $('#ExportToJpeg_name').val().trim();
+        if (name === '') name = 'exported';
+        name += '.jpg';
+        saveAs(blob, name);
+    });
+}
+
+let exportToWebp = async () => {
+    toUrlType($('#src').attr('src'), 'image/webp', parseFloat($('#ExportToWebp_quality input').val()) / 100.0).then((url) => {
+        let data = urlToB64(url);
+        let blob = b64toBlob(data.Base64, data.Mime);
+        let name = $('#ExportToWebp_name').val().trim();
+        if (name === '') name = 'exported';
+        name += '.webp';
+        saveAs(blob, name);
+    });
+}
+
+let exportToPng = async () => {
+    toUrlType($('#src').attr('src'), 'image/png').then((url) => {
+        let data = urlToB64(url);
+        let blob = b64toBlob(data.Base64, data.Mime);
+        let name = $('#ExportToPng_name').val().trim();
+        if (name === '') name = 'exported';
+        name += '.png';
+        saveAs(blob, name);
+    });
+}
+
+let toUrlType = async (src, type, encoderOptions) => {
+    return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.onload = () => {
+            let canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            let ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL(type, encoderOptions));
+        };
+        img.onerror = () => {
+            reject('Error while converting to ' + type + ' URL');
+        };
+        img.src = src;
+    });
+}
+
 let toPng = async (src) => {
     return new Promise((resolve, reject) => {
         let img = new Image();
@@ -1001,7 +1058,7 @@ let toPng = async (src) => {
             resolve(canvas.toDataURL('image/png'));
         };
         img.onerror = () => {
-            reject('error while converting to PNG URL');
+            reject('Error while converting to PNG URL');
         };
         img.src = src;
     });
@@ -6486,6 +6543,134 @@ $(function() {
                     <button class="btn_reset" type="button">Reset</button>
                     <button class="btn_apply" type="button">Preview</button>
                     <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_ExportToJpeg').Dialog({
+                onInit: function() {
+                    $('#ExportToJpeg_quality').barInput({"Label":"Quality","Min":0,"Max":100,"Default":80,"Float":false,"HalfScale":false});
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#ExportToJpeg_name').val('exported');
+                    $('#ExportToJpeg_quality').barInput('reset');
+                },
+                onOk: function() {
+                    exportToJpeg();
+                },
+                onCancel: function() {
+
+                },
+                onReset: function () {
+                    $('#ExportToJpeg_name').val('exported');
+                    $('#ExportToJpeg_quality').barInput('reset');
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_ExportToJpeg">
+        <div class="bar"><div class="caption">Export to JPEG</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div><label for="ExportToJpeg_name" style="display:inline-block;margin-right:7px;">File name</label><input id="ExportToJpeg_name" type="text" style="outline:none;margin-right: 3px;" value="exported">.jpg</div>
+                        <div id="ExportToJpeg_quality"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Export</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_ExportToWebp').Dialog({
+                onInit: function() {
+                    $('#ExportToWebp_quality').barInput({"Label":"Quality","Min":0,"Max":100,"Default":80,"Float":false,"HalfScale":false});
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#ExportToWebp_name').val('exported');
+                    $('#ExportToWebp_quality').barInput('reset');
+                },
+                onOk: function() {
+                    exportToWebp();
+                },
+                onCancel: function() {
+
+                },
+                onReset: function () {
+                    $('#ExportToWebp_name').val('exported');
+                    $('#ExportToWebp_quality').barInput('reset');
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_ExportToWebp">
+        <div class="bar"><div class="caption">Export to WEBP</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div><label for="ExportToWebp_name" style="display:inline-block;margin-right:7px;">File name</label><input id="ExportToWebp_name" type="text" style="outline:none;margin-right: 3px;" value="exported">.webp</div>
+                        <div id="ExportToWebp_quality"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Export</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_ExportToPng').Dialog({
+                onInit: function() {
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#ExportToPng_name').val('exported');
+                },
+                onOk: function() {
+                    exportToPng();
+                },
+                onCancel: function() {
+
+                },
+                onReset: function () {
+                    $('#ExportToPng_name').val('exported');
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_ExportToPng">
+        <div class="bar"><div class="caption">Export to PNG32</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div><label for="ExportToPng_name" style="display:inline-block;margin-right:7px;">File name</label><input id="ExportToPng_name" type="text" style="outline:none;margin-right: 3px;" value="exported">.png</div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Export</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
                 </div>
             </div>
         </div>

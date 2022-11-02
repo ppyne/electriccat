@@ -32,6 +32,35 @@
                                 }, {
                                     Separator: true
                                 }, {
+                                    id: 'miexport',
+                                    Caption: 'Export',
+                                    Items: [
+                                        {
+                                            id: 'miexporttopng',
+                                            Caption: 'Export to PNG32...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_ExportToPng').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'miexporttojpeg',
+                                            Caption: 'Export to JPEG...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_ExportToJpeg').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'miexporttowebp',
+                                            Caption: 'Export to WEBP...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_ExportToWebp').Dialog('open');
+                                            }
+                                        }
+                                    ]
+                                }, {
+                                    Separator: true
+                                }, {
                                     id: 'mirestart',
                                     Caption: 'Restart',
                                     onClick: function () {
