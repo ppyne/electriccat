@@ -6682,7 +6682,9 @@ $(function() {
         $(function() {
             $('#dialog_HueRangeSaturation').Dialog({
                 onInit: function() {
-                    $('#HueRangeSaturation_hue').barInput({"Label":"Hue","Min":0,"Max":360,"Default":0,"Float":false,"HalfScale":false});
+                    $('#HueRangeSaturation_hue').barInput({"Label":"Hue","Min":0,"Max":360,"Default":0,"Float":false,"HalfScale":false,"onDrag": function (values) {
+                        $('#HueRangeSaturation_gradient').css('background', 'linear-gradient(90deg, hsl(0,0%,50%) 0%, hsl('+values.Value+',100%,50%) 100%)');
+                    }});
                     $('#HueRangeSaturation_saturation').barInput({"Label":"Saturation","Min":-100,"Max":100,"Default":0,"Float":false,"HalfScale":true});
                     $('#HueRangeSaturation_tolerance').barInput({"Label":"Tolerance","Min":0,"Max":360,"Default":30,"Float":false,"HalfScale":false});
                     $('#HueRangeSaturation_ramping').barInput({"Label":"Ramping","Min":0,"Max":360,"Default":30,"Float":false,"HalfScale":false});
@@ -6726,7 +6728,9 @@ $(function() {
                 <div class="main">
                     <fieldset class="white">
                         <div id="HueRangeSaturation_hue"></div>
+                        <div style="width:200px;height:5px;background-image:url(images/spectre.png);margin-left:1px;"></div>
                         <div id="HueRangeSaturation_saturation"></div>
+                        <div id="HueRangeSaturation_gradient" style="width:200px;height:5px;margin-left:1px;background:linear-gradient(90deg, hsl(0, 0%, 50%) 0%, hsl(0,100%,50%) 100%);"></div>
                         <div id="HueRangeSaturation_tolerance"></div>
                         <div id="HueRangeSaturation_ramping"></div>
                     </fieldset>
