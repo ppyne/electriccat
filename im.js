@@ -331,6 +331,14 @@ let IMShadowHighlight = ($src, samount, swidth, sradius, hamount, hwidth, hradiu
     _IMClearFS();
 };
 
+let IMUnsaturateHue = ($src, hue, saturation, tolerance, ramping, hcl, $dst) => {
+    const [ width, height ] = _IMSetSource($src);
+    if (width === false) return;
+    _IMUnsaturateHue(width, height, hue, saturation, tolerance, ramping, hcl);
+    _IMSetDestination($dst, width, height);
+    _IMClearFS();
+};
+
 let _onIMReady = () => {
     _IMResize = Module.cwrap('_IMResize', null, ['number', 'number', 'number', 'number', 'number', 'number']);
     _IMCmdResize = Module.cwrap('_IMCmdResize', null, ['number', 'number', 'number', 'number', 'string']);
@@ -358,6 +366,7 @@ let _onIMReady = () => {
     _IMLucisArtEffect = Module.cwrap('_IMLucisArtEffect', null, ['number', 'number', 'number', 'number']);
     _IMCmdAutoGamma = Module.cwrap('_IMCmdAutoGamma', null, ['number', 'number']);
     _IMShadowHighlight = Module.cwrap('_IMShadowHighlight', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
+    _IMUnsaturateHue = Module.cwrap('_IMUnsaturateHue', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number']);
 };
 
 $(window).on('IMReady', _onIMReady);

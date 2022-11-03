@@ -887,6 +887,7 @@ function enableMenusOnOpen() {
     $('#miexporttopng').removeClass('disabled');
     $('#miexporttojpeg').removeClass('disabled');
     $('#miexporttowebp').removeClass('disabled');
+    $('#mihuerangesaturation').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -976,6 +977,7 @@ function disableMenusOnClose() {
     $('#miexporttopng').addClass('disabled');
     $('#miexporttojpeg').addClass('disabled');
     $('#miexporttowebp').addClass('disabled');
+    $('#mihuerangesaturation').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -6671,6 +6673,70 @@ $(function() {
                     <button class="btn_ok main" type="button">Export</button>
                     <button class="btn_cancel" type="button">Cancel</button>
                     <button class="btn_reset" type="button">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_HueRangeSaturation').Dialog({
+                onInit: function() {
+                    $('#HueRangeSaturation_hue').barInput({"Label":"Hue","Min":0,"Max":360,"Default":0,"Float":false,"HalfScale":false});
+                    $('#HueRangeSaturation_saturation').barInput({"Label":"Saturation","Min":-100,"Max":100,"Default":0,"Float":false,"HalfScale":true});
+                    $('#HueRangeSaturation_tolerance').barInput({"Label":"Tolerance","Min":0,"Max":360,"Default":30,"Float":false,"HalfScale":false});
+                    $('#HueRangeSaturation_ramping').barInput({"Label":"Ramping","Min":0,"Max":360,"Default":30,"Float":false,"HalfScale":false});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#HueRangeSaturation_hue').barInput('reset');
+                    $('#HueRangeSaturation_saturation').barInput('reset');
+                    $('#HueRangeSaturation_tolerance').barInput('reset');
+                    $('#HueRangeSaturation_ramping').barInput('reset');
+                },
+                onOk: function() {
+                    IMUnsaturateHue($('#src'), parseInt($('#HueRangeSaturation_hue input').val()), parseInt($('#HueRangeSaturation_saturation input').val())+100, parseInt($('#HueRangeSaturation_tolerance input').val()), parseInt($('#HueRangeSaturation_ramping input').val()), 0, $('#dst'));
+                    makeOk('Hue Range Saturation');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMUnsaturateHue($('#src'), parseInt($('#HueRangeSaturation_hue input').val()), parseInt($('#HueRangeSaturation_saturation input').val())+100, parseInt($('#HueRangeSaturation_tolerance input').val()), parseInt($('#HueRangeSaturation_ramping input').val()), 0, $('#dst'));
+                },
+                onReset: function () {
+                    $('#HueRangeSaturation_hue').barInput('reset');
+                    $('#HueRangeSaturation_saturation').barInput('reset');
+                    $('#HueRangeSaturation_tolerance').barInput('reset');
+                    $('#HueRangeSaturation_ramping').barInput('reset');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_HueRangeSaturation">
+        <div class="bar"><div class="caption">Hue Range Saturation</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div id="HueRangeSaturation_hue"></div>
+                        <div id="HueRangeSaturation_saturation"></div>
+                        <div id="HueRangeSaturation_tolerance"></div>
+                        <div id="HueRangeSaturation_ramping"></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
                 </div>
             </div>
         </div>

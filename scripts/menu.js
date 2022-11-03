@@ -296,6 +296,13 @@
                                         $('#dialog_hsl').Dialog('open');
                                     }
                                 }, {
+                                    id: 'mihuerangesaturation',
+                                    Caption: 'Hue Range Saturation...',
+                                    Disabled: true,
+                                    onClick: function () {
+                                        $('#dialog_HueRangeSaturation').Dialog('open');
+                                    }
+                                }, {
                                     id: 'michannelmixer',
                                     Caption: 'Channel Mixer...',
                                     Disabled: true,
