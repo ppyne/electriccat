@@ -802,6 +802,7 @@ function updateMenuMode(closing) {
 }
 
 function enableMenusOnOpen() {
+    if (typeof window.webpSupported === 'undefined') window.webpSupported = isSupported('webp');
     $('#miclose').removeClass('disabled');
     $('#misave').removeClass('disabled');
     $('#milevels').removeClass('disabled');
@@ -886,7 +887,7 @@ function enableMenusOnOpen() {
     $('#micopy').removeClass('disabled');
     $('#miexporttopng').removeClass('disabled');
     $('#miexporttojpeg').removeClass('disabled');
-    $('#miexporttowebp').removeClass('disabled');
+    if (window.webpSupported) $('#miexporttowebp').removeClass('disabled');
     $('#mihuerangesaturation').removeClass('disabled');
     $('#miturbulence').removeClass('disabled');
     $('#miimexporttowebp').removeClass('disabled');
@@ -999,39 +1000,6 @@ function makeOpenFile() {
             $('#mb_unsupported').messageBox('open');
       }
   }
-}
-
-let exportToJpeg = async () => {
-    toUrlType($('#src').attr('src'), 'image/jpeg', parseFloat($('#ExportToJpeg_quality input').val()) / 100.0).then((url) => {
-        let data = urlToB64(url);
-        let blob = b64toBlob(data.Base64, data.Mime);
-        let name = $('#ExportToJpeg_name').val().trim();
-        if (name === '') name = 'exported';
-        name += '.jpg';
-        saveAs(blob, name);
-    });
-}
-
-let exportToWebp = async () => {
-    toUrlType($('#src').attr('src'), 'image/webp', parseFloat($('#ExportToWebp_quality input').val()) / 100.0).then((url) => {
-        let data = urlToB64(url);
-        let blob = b64toBlob(data.Base64, data.Mime);
-        let name = $('#ExportToWebp_name').val().trim();
-        if (name === '') name = 'exported';
-        name += '.webp';
-        saveAs(blob, name);
-    });
-}
-
-let exportToPng = async () => {
-    toUrlType($('#src').attr('src'), 'image/png').then((url) => {
-        let data = urlToB64(url);
-        let blob = b64toBlob(data.Base64, data.Mime);
-        let name = $('#ExportToPng_name').val().trim();
-        if (name === '') name = 'exported';
-        name += '.png';
-        saveAs(blob, name);
-    });
 }
 
 let toUrlType = async (src, type, encoderOptions) => {
@@ -6564,16 +6532,35 @@ $(function() {
                     $('#src').show();
                     $('#ExportToJpeg_name').val('exported');
                     $('#ExportToJpeg_quality').barInput('reset');
+                    $('#ExportToJpeg_size').empty();
                 },
-                onOk: function() {
-                    exportToJpeg();
+                onOk: () => {
+                    toUrlType($('#src').attr('src'), 'image/jpeg', parseFloat($('#ExportToJpeg_quality input').val()) / 100.0).then((url) => {
+                        let data = urlToB64(url);
+                        let blob = b64toBlob(data.Base64, data.Mime);
+                        let name = $('#ExportToJpeg_name').val().trim();
+                        if (name === '') name = 'exported';
+                        name += '.jpg';
+                        saveAs(blob, name);
+                    });
+                    makeCancel();
                 },
                 onCancel: function() {
-
+                    makeCancel();
+                },
+                onApply: function () {
+                    toUrlType($('#src').attr('src'), 'image/jpeg', parseFloat($('#ExportToJpeg_quality input').val()) / 100.0).then((url) => {
+                        let data = urlToB64(url);
+                        let blob = b64toBlob(data.Base64, data.Mime);
+                        $('#ExportToJpeg_size').text('Size: ' + humanFileSize(blob.size));
+                        $('#dst').attr('src', url);
+                    });
                 },
                 onReset: function () {
                     $('#ExportToJpeg_name').val('exported');
                     $('#ExportToJpeg_quality').barInput('reset');
+                    $('#ExportToJpeg_size').empty();
+                    $('#dst').attr('src', $('#src').attr('src'));
                 }
             });
         });
@@ -6587,12 +6574,14 @@ $(function() {
                     <fieldset class="white">
                         <div><label for="ExportToJpeg_name" style="display:inline-block;margin-right:7px;">File name</label><input id="ExportToJpeg_name" type="text" style="outline:none;margin-right: 3px;" value="exported">.jpg</div>
                         <div id="ExportToJpeg_quality"></div>
+                        <div style="margin-top:10px;" id="ExportToJpeg_size"></div>
                     </fieldset>
                 </div>
                 <div class="buttons">
                     <button class="btn_ok main" type="button">Export</button>
                     <button class="btn_cancel" type="button">Cancel</button>
                     <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
                 </div>
             </div>
         </div>
@@ -6608,16 +6597,35 @@ $(function() {
                     $('#src').show();
                     $('#ExportToWebp_name').val('exported');
                     $('#ExportToWebp_quality').barInput('reset');
+                    $('#ExportToWebp_size').empty();
                 },
-                onOk: function() {
-                    exportToWebp();
+                onOk: () => {
+                    toUrlType($('#src').attr('src'), 'image/webp', parseFloat($('#ExportToWebp_quality input').val()) / 100.0).then((url) => {
+                        let data = urlToB64(url);
+                        let blob = b64toBlob(data.Base64, data.Mime);
+                        let name = $('#ExportToWebp_name').val().trim();
+                        if (name === '') name = 'exported';
+                        name += '.webp';
+                        saveAs(blob, name);
+                    });
+                    makeCancel();
                 },
                 onCancel: function() {
-
+                    makeCancel();
+                },
+                onApply: function () {
+                    toUrlType($('#src').attr('src'), 'image/webp', parseFloat($('#ExportToWebp_quality input').val()) / 100.0).then((url) => {
+                        let data = urlToB64(url);
+                        let blob = b64toBlob(data.Base64, data.Mime);
+                        $('#ExportToWebp_size').text('Size: ' + humanFileSize(blob.size));
+                        $('#dst').attr('src', url);
+                    });
                 },
                 onReset: function () {
                     $('#ExportToWebp_name').val('exported');
                     $('#ExportToWebp_quality').barInput('reset');
+                    $('#ExportToWebp_size').empty();
+                    $('#dst').attr('src', $('#src').attr('src'));
                 }
             });
         });
@@ -6631,12 +6639,14 @@ $(function() {
                     <fieldset class="white">
                         <div><label for="ExportToWebp_name" style="display:inline-block;margin-right:7px;">File name</label><input id="ExportToWebp_name" type="text" style="outline:none;margin-right: 3px;" value="exported">.webp</div>
                         <div id="ExportToWebp_quality"></div>
+                        <div style="margin-top:10px;" id="ExportToWebp_size"></div>
                     </fieldset>
                 </div>
                 <div class="buttons">
                     <button class="btn_ok main" type="button">Export</button>
                     <button class="btn_cancel" type="button">Cancel</button>
                     <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
                 </div>
             </div>
         </div>
@@ -6651,8 +6661,15 @@ $(function() {
                     $('#src').show();
                     $('#ExportToPng_name').val('exported');
                 },
-                onOk: function() {
-                    exportToPng();
+                onOk: () => {
+                    toUrlType($('#src').attr('src'), 'image/png').then((url) => {
+                        let data = urlToB64(url);
+                        let blob = b64toBlob(data.Base64, data.Mime);
+                        let name = $('#ExportToPng_name').val().trim();
+                        if (name === '') name = 'exported';
+                        name += '.png';
+                        saveAs(blob, name);
+                    });
                 },
                 onCancel: function() {
 
@@ -6840,7 +6857,8 @@ $(function() {
                     $('#IMExportToWebp_name').val('exported');
                     $('#IMExportToWebp_quality').barInput('reset');
                     $('#IMExportToWebp_optimization').barInput('reset');
-                    $('#IMExportToWebp_lossless').prop( "checked", false );
+                    $('#IMExportToWebp_lossless').prop( "checked", false);
+                    $('#IMExportToWebp_size').empty();
                 },
                 onOk: async () => {
                     let data = await IMToWebP(
@@ -6853,15 +6871,28 @@ $(function() {
                     if (name === '') name = 'exported';
                     name += '.webp';
                     saveAs(data.blob, name);
+                    makeCancel();
                 },
                 onCancel: function() {
-
+                    makeCancel();
+                },
+                onApply: async () => {
+                    let data = await IMToWebP(
+                        $('#src'),
+                        parseInt($('#IMExportToWebp_quality input').val()),
+                        $('#IMExportToWebp_lossless').is(':checked')?1:0,
+                        parseInt($('#IMExportToWebp_optimization input').val())
+                    );
+                    $('#IMExportToWebp_size').text('Size: ' + humanFileSize(data.size));
+                    $('#dst').attr('src', data.base64url);
                 },
                 onReset: function () {
                     $('#IMExportToWebp_name').val('exported');
                     $('#IMExportToWebp_quality').barInput('reset');
                     $('#IMExportToWebp_optimization').barInput('reset');
-                    $('#IMExportToWebp_lossless').prop( "checked", false );
+                    $('#IMExportToWebp_lossless').prop( "checked", false);
+                    $('#IMExportToWebp_size').empty();
+                    $('#dst').attr('src', $('#src').attr('src'));
                 }
             });
         });
@@ -6876,13 +6907,15 @@ $(function() {
                         <div><label for="IMExportToWebp_name" style="display:inline-block;margin-right:7px;">File name</label><input id="IMExportToWebp_name" type="text" style="outline:none;margin-right: 3px;" value="exported">.webp</div>
                         <div id="IMExportToWebp_quality"></div>
                         <div id="IMExportToWebp_optimization"></div>
-                        <div><input id="IMExportToWebp_lossless" type="checkbox" /><label for="IMExportToWebp_lossless" style="display:inline-block;margin-left:5px;">Lossless</label></div>
+                        <div style="margin-top:10px;"><input id="IMExportToWebp_lossless" type="checkbox" /><label for="IMExportToWebp_lossless" style="display:inline-block;margin-left:5px;">Lossless</label></div>
+                        <div style="margin-top:10px;" id="IMExportToWebp_size"></div>
                     </fieldset>
                 </div>
                 <div class="buttons">
                     <button class="btn_ok main" type="button">Export</button>
                     <button class="btn_cancel" type="button">Cancel</button>
                     <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
                     <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
                 </div>
             </div>

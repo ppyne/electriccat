@@ -2037,3 +2037,29 @@ function lanczosWeird(imageData, width, height, lobes) {
 	};
 	return obj.process(obj,0);
 }
+
+function humanFileSize(bytes, si=true, dp=1) {
+    const thresh = si ? 1000 : 1024;
+    if (Math.abs(bytes) < thresh) return bytes + ' B';
+    const units = si 
+      ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] 
+      : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+    let u = -1;
+    const r = 10**dp;
+    do {
+      bytes /= thresh;
+      ++u;
+    } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+    return bytes.toFixed(dp) + ' ' + units[u];
+  }
+
+  function isSupported(format = 'webp') {
+    let canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = 1;
+    let ctx = canvas.getContext("2d");
+    ctx.fillRect(0, 0, 1, 1);
+    let str = canvas.toDataURL('image/'+format);
+    const re = new RegExp('^data:image/'+format+';base64,');
+    return re.test(str);
+}
