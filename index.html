@@ -888,6 +888,8 @@ function enableMenusOnOpen() {
     $('#miexporttojpeg').removeClass('disabled');
     $('#miexporttowebp').removeClass('disabled');
     $('#mihuerangesaturation').removeClass('disabled');
+    $('#miturbulence').removeClass('disabled');
+    $('#miimexporttowebp').removeClass('disabled');
     updateMenuMode();
 }
 
@@ -978,6 +980,8 @@ function disableMenusOnClose() {
     $('#miexporttojpeg').addClass('disabled');
     $('#miexporttowebp').addClass('disabled');
     $('#mihuerangesaturation').addClass('disabled');
+    $('#miturbulence').addClass('disabled');
+    $('#miimexporttowebp').addClass('disabled');
     updateMenuMode(true);
 }
 
@@ -6576,7 +6580,7 @@ $(function() {
     </script>
 
     <div class="dialog" id="dialog_ExportToJpeg">
-        <div class="bar"><div class="caption">Export to browser native JPEG</div></div>
+        <div class="bar"><div class="caption">Export to JPEG with browser</div></div>
         <div class="border">
             <div class="zone">
                 <div class="main">
@@ -6620,7 +6624,7 @@ $(function() {
     </script>
 
     <div class="dialog" id="dialog_ExportToWebp">
-        <div class="bar"><div class="caption">Export to browser native WEBP</div></div>
+        <div class="bar"><div class="caption">Export to WEBP with browser</div></div>
         <div class="border">
             <div class="zone">
                 <div class="main">
@@ -6661,7 +6665,7 @@ $(function() {
     </script>
 
     <div class="dialog" id="dialog_ExportToPng">
-        <div class="bar"><div class="caption">Export to browser native PNG</div></div>
+        <div class="bar"><div class="caption">Export to PNG with browser</div></div>
         <div class="border">
             <div class="zone">
                 <div class="main">
@@ -6741,6 +6745,144 @@ $(function() {
                     <button class="btn_reset" type="button">Reset</button>
                     <button class="btn_apply" type="button">Preview</button>
                     <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_turbulence').Dialog({
+                onInit: function() {
+                    $('#turbulence_distance').barInput({"Label":"Distance","Min":0,"Max":1000,"Default":50,"Float":false,"HalfScale":false});
+                    $('#turbulence_smooth').barInput({"Label":"Smooth","Min":0,"Max":100,"Default":20,"Float":false,"HalfScale":false});
+                },
+                onOpen: function() {
+                    $('#dst').attr('src', $('#src').attr('src'));
+                    $('#src').hide();
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#turbulence_method').val('0');
+                    $('#turbulence_distance').barInput('reset');
+                    $('#turbulence_smooth').barInput('reset');
+                    $('#turbulence_channels').val('0');
+                },
+                onOk: function() {
+                    IMTurbulence(
+                        $('#src'),
+                        parseInt($('#turbulence_method').val()),
+                        parseInt($('#turbulence_distance input').val()),
+                        parseInt($('#turbulence_distance input').val()),
+                        parseInt($('#turbulence_smooth input').val()),
+                        parseInt($('#turbulence_channels').val()),
+                        $('#dst')
+                    );
+                    makeOk('Turbulence');
+                },
+                onCancel: function() {
+                    makeCancel();
+                },
+                onApply: function () {
+                    IMTurbulence(
+                        $('#src'),
+                        parseInt($('#turbulence_method').val()),
+                        parseInt($('#turbulence_distance input').val()),
+                        parseInt($('#turbulence_distance input').val()),
+                        parseInt($('#turbulence_smooth input').val()),
+                        parseInt($('#turbulence_channels').val()),
+                        $('#dst')
+                    );
+                },
+                onReset: function () {
+                    $('#turbulence_method').val('0');
+                    $('#turbulence_distance').barInput('reset');
+                    $('#turbulence_smooth').barInput('reset');
+                    $('#turbulence_channels').val('0');
+                    $('#dst').attr('src', $('#src').attr('src'));
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_turbulence">
+        <div class="bar"><div class="caption">Turbulence</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div><label for="turbulence_method" style="display:inline-block;width:70px;">Method</label><select id="turbulence_method"><option value="0">Displace</option><option value="1">Distort</option></select></div>
+                        <div id="turbulence_distance"></div>
+                        <div id="turbulence_smooth"></div>
+                        <div><label for="turbulence_channels" style="display:inline-block;width:70px;margin-top:14px;">Channels</label><select id="turbulence_channels"><option value="0">Together</option><option value="1">Separate</option></select></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Ok</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
+                    <button class="btn_apply" type="button">Preview</button>
+                    <a href="https://imagemagick.org/" target="_blank"><div class="IM" title="Powered by Image Magick"></div></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $('#dialog_IMExportToWebp').Dialog({
+                onInit: function() {
+                    $('#IMExportToWebp_quality').barInput({"Label":"Quality","Min":0,"Max":100,"Default":80,"Float":false,"HalfScale":false});
+                    $('#IMExportToWebp_optimization').barInput({"Label":"Optimization","Min":0,"Max":6,"Default":4,"Float":false,"HalfScale":false});
+                },
+                onClose: function() {
+                    $('#src').show();
+                    $('#IMExportToWebp_name').val('exported');
+                    $('#IMExportToWebp_quality').barInput('reset');
+                    $('#IMExportToWebp_optimization').barInput('reset');
+                    $('#IMExportToWebp_lossless').prop( "checked", false );
+                },
+                onOk: async () => {
+                    let data = await IMToWebP(
+                        $('#src'),
+                        parseInt($('#IMExportToWebp_quality input').val()),
+                        $('#IMExportToWebp_lossless').is(':checked')?1:0,
+                        parseInt($('#IMExportToWebp_optimization input').val())
+                    );
+                    let name = $('#IMExportToWebp_name').val().trim();
+                    if (name === '') name = 'exported';
+                    name += '.webp';
+                    saveAs(data.blob, name);
+                },
+                onCancel: function() {
+
+                },
+                onReset: function () {
+                    $('#IMExportToWebp_name').val('exported');
+                    $('#IMExportToWebp_quality').barInput('reset');
+                    $('#IMExportToWebp_optimization').barInput('reset');
+                    $('#IMExportToWebp_lossless').prop( "checked", false );
+                }
+            });
+        });
+    </script>
+
+    <div class="dialog" id="dialog_IMExportToWebp">
+        <div class="bar"><div class="caption">Export to WEBP with Image Magick</div></div>
+        <div class="border">
+            <div class="zone">
+                <div class="main">
+                    <fieldset class="white">
+                        <div><label for="IMExportToWebp_name" style="display:inline-block;margin-right:7px;">File name</label><input id="IMExportToWebp_name" type="text" style="outline:none;margin-right: 3px;" value="exported">.webp</div>
+                        <div id="IMExportToWebp_quality"></div>
+                        <div id="IMExportToWebp_optimization"></div>
+                        <div><input id="IMExportToWebp_lossless" type="checkbox" /><label for="IMExportToWebp_lossless" style="display:inline-block;margin-left:5px;">Lossless</label></div>
+                    </fieldset>
+                </div>
+                <div class="buttons">
+                    <button class="btn_ok main" type="button">Export</button>
+                    <button class="btn_cancel" type="button">Cancel</button>
+                    <button class="btn_reset" type="button">Reset</button>
                 </div>
             </div>
         </div>

@@ -36,26 +36,45 @@
                                     Caption: 'Export',
                                     Items: [
                                         {
-                                            id: 'miexporttopng',
-                                            Caption: 'To browser native PNG...',
-                                            Disabled: true,
-                                            onClick: function () {
-                                                $('#dialog_ExportToPng').Dialog('open');
-                                            }
+                                            id: 'miimexport',
+                                            Caption: 'With Image Magick',
+                                            Items: [
+                                                {
+                                                    id: 'miimexporttowebp',
+                                                    Caption: 'To WEBP...',
+                                                    Disabled: true,
+                                                    onClick: function () {
+                                                        $('#dialog_IMExportToWebp').Dialog('open');
+                                                    }
+                                                }
+                                            ]
                                         }, {
-                                            id: 'miexporttojpeg',
-                                            Caption: 'To browser native JPEG...',
-                                            Disabled: true,
-                                            onClick: function () {
-                                                $('#dialog_ExportToJpeg').Dialog('open');
-                                            }
-                                        }, {
-                                            id: 'miexporttowebp',
-                                            Caption: 'To browser native WEBP...',
-                                            Disabled: true,
-                                            onClick: function () {
-                                                $('#dialog_ExportToWebp').Dialog('open');
-                                            }
+                                            id: 'miexport',
+                                            Caption: 'With browser',
+                                            Items: [
+                                                {
+                                                    id: 'miexporttopng',
+                                                    Caption: 'To PNG...',
+                                                    Disabled: true,
+                                                    onClick: function () {
+                                                        $('#dialog_ExportToPng').Dialog('open');
+                                                    }
+                                                }, {
+                                                    id: 'miexporttojpeg',
+                                                    Caption: 'To JPEG...',
+                                                    Disabled: true,
+                                                    onClick: function () {
+                                                        $('#dialog_ExportToJpeg').Dialog('open');
+                                                    }
+                                                }, {
+                                                    id: 'miexporttowebp',
+                                                    Caption: 'To WEBP...',
+                                                    Disabled: true,
+                                                    onClick: function () {
+                                                        $('#dialog_ExportToWebp').Dialog('open');
+                                                    }
+                                                }
+                                            ]
                                         }
                                     ]
                                 }, {
@@ -592,6 +611,13 @@
                                             Disabled: true,
                                             onClick: function () {
                                                 $('#dialog_frosted').Dialog('open');
+                                            }
+                                        }, {
+                                            id: 'miturbulence',
+                                            Caption: 'Turbulence...',
+                                            Disabled: true,
+                                            onClick: function () {
+                                                $('#dialog_turbulence').Dialog('open');
                                             }
                                         }
                                     ]

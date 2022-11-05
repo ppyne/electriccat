@@ -5534,6 +5534,12 @@ var __IMShadowHighlight = Module["__IMShadowHighlight"] = createExportWrapper("_
 var __IMUnsaturateHue = Module["__IMUnsaturateHue"] = createExportWrapper("_IMUnsaturateHue");
 
 /** @type {function(...*):?} */
+var __IMTurbulence = Module["__IMTurbulence"] = createExportWrapper("_IMTurbulence");
+
+/** @type {function(...*):?} */
+var __IMToWebP = Module["__IMToWebP"] = createExportWrapper("_IMToWebP");
+
+/** @type {function(...*):?} */
 var _main = Module["_main"] = createExportWrapper("main");
 
 /** @type {function(...*):?} */
@@ -5572,10 +5578,13 @@ var stackAlloc = Module["stackAlloc"] = createExportWrapper("stackAlloc");
 var dynCall_iijji = Module["dynCall_iijji"] = createExportWrapper("dynCall_iijji");
 
 /** @type {function(...*):?} */
+var dynCall_jiiiii = Module["dynCall_jiiiii"] = createExportWrapper("dynCall_jiiiii");
+
+/** @type {function(...*):?} */
 var dynCall_jiji = Module["dynCall_jiji"] = createExportWrapper("dynCall_jiji");
 
-var ___start_em_js = Module['___start_em_js'] = 575648;
-var ___stop_em_js = Module['___stop_em_js'] = 576816;
+var ___start_em_js = Module['___start_em_js'] = 607664;
+var ___stop_em_js = Module['___stop_em_js'] = 608832;
 
 
 

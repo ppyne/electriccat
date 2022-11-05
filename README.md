@@ -4,9 +4,9 @@ Electric Cat is an image processing software project, under development, impleme
 
 The software uses libraries and algorithms transcribed into JS from Gimp, ImageMagick and many other free software. Not everything is optimized yet, and some processing, depending on the parameters used, can take a lot of CPU time when they are not performed by the GPU with WebGL, discovered during the project.
 
-At this stage of development (a hundred hours only), the software has only been tested on Google Chrome, on Macintosh. Thank you for using Chrome to test Electric Cat.
+At this stage of development (a hundred hours only), the software has only been tested on Google Chrome, on Macintosh. Please use Chrome, Chromium or Edge to test Electric Cat, any other browser may not work or perform very well.
 
-Handled image formats are PNG, JPG, WEBP and GIF (not animated).
+Handled image formats are PNG, JPG, WEBP and GIF (not animated). Advanced WEBP export can be performed thanks to Image Magick (optimization, lossless).
 
 It is possible to undo the last 20 actions using the Edit / Undo menu.
 
